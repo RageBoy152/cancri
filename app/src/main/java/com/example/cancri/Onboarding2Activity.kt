@@ -5,7 +5,7 @@ Date created - 24/03/26
 Ver 1.0
  */
 
-package com.example.cancri  // ← Change this to your actual package name
+package com.example.cancri
 
 import android.content.Intent
 import android.os.Bundle
