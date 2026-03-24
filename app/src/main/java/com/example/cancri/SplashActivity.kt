@@ -1,4 +1,11 @@
-package com.example.cancri  // ← Change this to your actual package name
+/* Cancri - money management app
+Programming for Mobile - COMP08068
+Team - Matt Miller, Kyle McNamee, Jaimie Neilson, Andrew Gilmour
+Date created - 24/03/26
+Ver 1.0
+ */
+
+package com.example.cancri
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
