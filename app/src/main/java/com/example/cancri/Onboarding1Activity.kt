@@ -48,6 +48,7 @@ class Onboarding1Activity : AppCompatActivity() {
         btnGetStarted.setOnClickListener {
             startActivity(Intent(this, Onboarding2Activity::class.java))
             finish()
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
     }
 }

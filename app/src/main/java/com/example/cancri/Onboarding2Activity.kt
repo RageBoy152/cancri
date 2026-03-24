@@ -59,6 +59,7 @@ class Onboarding2Activity : AppCompatActivity() {
             intent.putExtra("USER_NAME", name)
             startActivity(intent)
             finish()
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
     }
 }
