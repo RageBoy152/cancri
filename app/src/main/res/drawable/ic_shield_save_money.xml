@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="90dp"
+    android:height="118dp"
+    android:viewportWidth="90"
+    android:viewportHeight="118">
+
+    <!-- Shield outline -->
+    <path
+        android:pathData="M45,3 L87,18 L87,60 Q87,98 45,115 Q3,98 3,60 L3,18 Z"
+        android:fillColor="#00000000"
+        android:strokeColor="#4CAF50"
+        android:strokeWidth="6" />
+
+    <!-- £ symbol — vertical stem -->
+    <path
+        android:pathData="M40,32 L40,72"
+        android:fillColor="#00000000"
+        android:strokeColor="#4CAF50"
+        android:strokeWidth="8"
+        android:strokeLineCap="round" />
+
+    <!-- £ symbol — top curve/hook -->
+    <path
+        android:pathData="M40,32 Q40,22 50,22 Q58,22 58,30"
+        android:fillColor="#00000000"
+        android:strokeColor="#4CAF50"
+        android:strokeWidth="8"
+        android:strokeLineCap="round" />
+
+    <!-- £ symbol — middle crossbar -->
+    <path
+        android:pathData="M32,52 L52,52"
+        android:fillColor="#00000000"
+        android:strokeColor="#4CAF50"
+        android:strokeWidth="8"
+        android:strokeLineCap="round" />
+
+    <!-- £ symbol — bottom base line -->
+    <path
+        android:pathData="M30,72 L62,72"
+        android:fillColor="#00000000"
+        android:strokeColor="#4CAF50"
+        android:strokeWidth="8"
+        android:strokeLineCap="round" />
+
+</vector>
