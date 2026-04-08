@@ -10,6 +10,7 @@ package com.example.cancri
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -232,7 +233,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupBottomNav() {
         findViewById<FloatingActionButton>(R.id.fabAddTransaction).setOnClickListener { openDrawer() }
         findViewById<LinearLayout>(R.id.navSettings).setOnClickListener {
-            Toast.makeText(this, "Settings coming soon", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
         // EDIT  launches the subscriptions edit screen
         findViewById<TextView>(R.id.btnEditSubs).setOnClickListener {
