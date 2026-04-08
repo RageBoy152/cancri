@@ -55,6 +55,17 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Cancri" />
 
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Cancri" />
+
+        <activity
+            android:name=".EditProfileActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Cancri" />
     </application>
 
 </manifest>

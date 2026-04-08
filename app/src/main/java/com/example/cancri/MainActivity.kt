@@ -10,6 +10,7 @@ package com.example.cancri
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -78,15 +79,32 @@ class MainActivity : AppCompatActivity() {
         observeTransactions()
         observeSubscriptions()
     }
+    override fun onResume() {
+        super.onResume()
+        val prefs     = getSharedPreferences("cancri_prefs", MODE_PRIVATE)
+        val firstName = prefs.getString("user_first_name", "") ?: ""
+        val lastName  = prefs.getString("user_last_name", "") ?: ""
+        val userName  = when {
+            firstName.isNotEmpty() && lastName.isNotEmpty() -> "$firstName $lastName"
+            firstName.isNotEmpty() -> firstName
+            else -> prefs.getString("user_name", "there") ?: "there"
+        }
+        findViewById<TextView>(R.id.heroName).text = userName
+    }
 
     //  Hero
     private fun setupHero() {
-        val prefs    = getSharedPreferences("cancri_prefs", MODE_PRIVATE)
-        val userName = prefs.getString("user_name", "there") ?: "there"
+        val prefs     = getSharedPreferences("cancri_prefs", MODE_PRIVATE)
+        val firstName = prefs.getString("user_first_name", "") ?: ""
+        val lastName  = prefs.getString("user_last_name", "") ?: ""
+        val userName  = when {
+            firstName.isNotEmpty() && lastName.isNotEmpty() -> "$firstName $lastName"
+            firstName.isNotEmpty() -> firstName
+            else -> prefs.getString("user_name", "there") ?: "there"
+        }
         findViewById<TextView>(R.id.heroGreeting).text = getTimeGreeting()
         findViewById<TextView>(R.id.heroName).text     = userName
     }
-
     private fun getTimeGreeting() = when (Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) {
         in 0..11  -> "Good morning,"
         in 12..17 -> "Good afternoon,"
@@ -232,7 +250,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupBottomNav() {
         findViewById<FloatingActionButton>(R.id.fabAddTransaction).setOnClickListener { openDrawer() }
         findViewById<LinearLayout>(R.id.navSettings).setOnClickListener {
-            Toast.makeText(this, "Settings coming soon", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
         // EDIT  launches the subscriptions edit screen
         findViewById<TextView>(R.id.btnEditSubs).setOnClickListener {
