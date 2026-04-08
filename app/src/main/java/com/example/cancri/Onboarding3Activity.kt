@@ -1,3 +1,11 @@
+/* Cancri - money management app
+Programming for Mobile - COMP08068
+Team - Matt Miller, Kyle McNamee, Jaimie Neilson, Andrew Gilmour
+Date created - 24/03/26
+Ver 1.0
+Ver 1.1 Created 08/04/26
+ */
+
 package com.example.cancri
 
 import android.content.Intent
@@ -11,7 +19,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 
 class Onboarding3Activity : AppCompatActivity() {
 
@@ -60,12 +67,10 @@ class Onboarding3Activity : AppCompatActivity() {
             val (goalName, imageView) = pair
             container.setOnClickListener {
                 if (selectedGoals.contains(goalName)) {
-                    // Deselect — return to normal opacity
                     selectedGoals.remove(goalName)
                     imageView.alpha = 1f
                     container.alpha = 0.6f
                 } else {
-                    // Select — full brightness + slight scale pop
                     selectedGoals.add(goalName)
                     imageView.alpha = 1f
                     container.alpha = 1f
@@ -75,12 +80,10 @@ class Onboarding3Activity : AppCompatActivity() {
                         }.start()
                 }
             }
-            // Start slightly dimmed to show they're selectable
             container.alpha = 0.6f
         }
 
         // ── Navigation ───────────────────────────────────────────────────
-        val incomingName = intent.getStringExtra("USER_NAME")
         val btnFinish = findViewById<Button>(R.id.btnFinish)
 
         btnFinish.setOnClickListener {
@@ -88,10 +91,10 @@ class Onboarding3Activity : AppCompatActivity() {
                 Toast.makeText(this, "Please select at least one goal", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            val intent = Intent(this, MainActivity::class.java)
-            intent.putExtra("USER_NAME", incomingName)
-            intent.putStringArrayListExtra("USER_GOALS", ArrayList(selectedGoals))
-            startActivity(intent)
+            // ── Navigate to WelcomeActivity instead of MainActivity ──
+            // Name is already saved in SharedPreferences by Onboarding2Activity.
+            // Goals can be saved here if needed in future.
+            startActivity(Intent(this, WelcomeActivity::class.java))
             finish()
         }
     }

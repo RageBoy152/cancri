@@ -1,5 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Base -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Brand greens -->
+    <color name="green_dark">#1B4332</color>
+    <color name="green_primary">#2D6A4F</color>
+    <color name="green_light">#52B788</color>
+    <color name="green_accent">#52D68A</color>
+
+    <!-- UI surfaces -->
+    <color name="surface_page">#F7F7F5</color>
+    <color name="surface_card">#FFFFFF</color>
+    <color name="surface_input">#FAFAFA</color>
+    <color name="surface_quick">#F9F9F9</color>
+    <color name="surface_amount">#F5F5F5</color>
+
+    <!-- Text -->
+    <color name="text_primary">#1A1A1A</color>
+    <color name="text_secondary">#555555</color>
+    <color name="text_muted">#999999</color>
+    <color name="text_hint">#888888</color>
+    <color name="text_white">#FFFFFFFF</color>
+    <color name="text_white_75">#BFFFFFFF</color>
+    <color name="text_white_60">#99FFFFFF</color>
+
+    <!-- Status bar colours -->
+    <color name="bar_green">#2D6A4F</color>
+    <color name="bar_amber">#E9A825</color>
+    <color name="bar_red">#C0392B</color>
+    <color name="bar_track">#EEEEEE</color>
+
+    <!-- Dividers / borders -->
+    <color name="divider">#F0F0F0</color>
+    <color name="border_light">#E5E5E5</color>
+    <color name="border_nav">#E5E5E5</color>
+
+    <!-- Subscription brand colours -->
+    <color name="spotify_green">#1DB954</color>
+    <color name="netflix_red">#E50914</color>
+    <color name="paramount_blue">#0064FF</color>
+
+    <!-- Overlay / vignette -->
+    <color name="vignette_start">#30000000</color>
+    <color name="vignette_end">#8C000000</color>
+    <color name="drawer_overlay">#66000000</color>
+
+    <!-- Toast -->
+    <color name="toast_bg">#1B4332</color>
 </resources>
