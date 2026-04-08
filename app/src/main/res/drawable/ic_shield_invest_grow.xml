@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="90dp"
+    android:height="118dp"
+    android:viewportWidth="90"
+    android:viewportHeight="118">
+
+    <!-- Shield outline -->
+    <path
+        android:pathData="M45,3 L87,18 L87,60 Q87,98 45,115 Q3,98 3,60 L3,18 Z"
+        android:fillColor="#00000000"
+        android:strokeColor="#4CAF50"
+        android:strokeWidth="6" />
+
+    <!-- Bottom coin body -->
+    <path
+        android:pathData="M23,72 L67,72 L67,78 L23,78 Z"
+        android:fillColor="#4CAF50" />
+    <!-- Bottom coin top ellipse -->
+    <path
+        android:pathData="M45,66 m-22,0 a22,6 0 1,0 44,0 a22,6 0 1,0 -44,0"
+        android:fillColor="#81C784" />
+    <!-- Bottom coin bottom ellipse -->
+    <path
+        android:pathData="M45,78 m-22,0 a22,6 0 1,0 44,0 a22,6 0 1,0 -44,0"
+        android:fillColor="#4CAF50" />
+
+    <!-- Middle coin body -->
+    <path
+        android:pathData="M23,58 L67,58 L67,64 L23,64 Z"
+        android:fillColor="#4CAF50" />
+    <!-- Middle coin top ellipse -->
+    <path
+        android:pathData="M45,52 m-22,0 a22,6 0 1,0 44,0 a22,6 0 1,0 -44,0"
+        android:fillColor="#81C784" />
+    <!-- Middle coin bottom ellipse -->
+    <path
+        android:pathData="M45,64 m-22,0 a22,6 0 1,0 44,0 a22,6 0 1,0 -44,0"
+        android:fillColor="#4CAF50" />
+
+    <!-- Top coin body -->
+    <path
+        android:pathData="M23,44 L67,44 L67,50 L23,50 Z"
+        android:fillColor="#4CAF50" />
+    <!-- Top coin top ellipse -->
+    <path
+        android:pathData="M45,38 m-22,0 a22,6 0 1,0 44,0 a22,6 0 1,0 -44,0"
+        android:fillColor="#81C784" />
+    <!-- Top coin bottom ellipse -->
+    <path
+        android:pathData="M45,50 m-22,0 a22,6 0 1,0 44,0 a22,6 0 1,0 -44,0"
+        android:fillColor="#4CAF50" />
+
+</vector>
