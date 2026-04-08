@@ -3,6 +3,7 @@ Programming for Mobile - COMP08068
 Team - Matt Miller, Kyle McNamee, Jaimie Neilson, Andrew Gilmour
 Date created - 24/03/26
 Ver 1.0
+Ver 1.1 Created 08/04/26
  */
 
 package com.example.cancri
@@ -30,8 +31,8 @@ class Onboarding2Activity : AppCompatActivity() {
 
         // Slide up from off-screen bottom
         val slideUp = TranslateAnimation(
-            0f, 0f,          // X: no horizontal movement
-            800f, 0f         // Y: start 800px below, end at natural position
+            0f, 0f,
+            800f, 0f
         ).apply {
             duration = 700
             interpolator = DecelerateInterpolator()
@@ -46,7 +47,7 @@ class Onboarding2Activity : AppCompatActivity() {
         val animSet = AnimationSet(true).apply {
             addAnimation(slideUp)
             addAnimation(fadeIn)
-            startOffset = 200   // slight delay so the screen background loads first
+            startOffset = 200
             fillAfter = true
         }
 
@@ -61,7 +62,14 @@ class Onboarding2Activity : AppCompatActivity() {
                 Toast.makeText(this, "Please enter your name", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            // Pass the name to Onboarding3
+
+            // ── Save name to SharedPreferences for WelcomeActivity & MainActivity ──
+            getSharedPreferences("cancri_prefs", MODE_PRIVATE)
+                .edit()
+                .putString("user_name", name)
+                .apply()
+
+            // Pass the name to Onboarding3 via Intent extra (existing behaviour)
             val intent = Intent(this, Onboarding3Activity::class.java)
             intent.putExtra("USER_NAME", name)
             startActivity(intent)

@@ -36,4 +36,12 @@ interface TransactionDao {
 
     @Query("SELECT * FROM transactions WHERE subscription = :subscriptionId ORDER BY created_at DESC")
     fun observeBySubscription(subscriptionId: UUID): Flow<List<TransactionModel>>
+
+    // ── Delete all transactions for a given subscription ID ───────────────
+    @Query("DELETE FROM transactions WHERE subscription = :subscriptionId")
+    suspend fun deleteBySubscriptionId(subscriptionId: UUID)
+
+    // ── Update amount for all transactions linked to a subscription ───────
+    @Query("UPDATE transactions SET amount = :newAmount WHERE subscription = :subscriptionId")
+    suspend fun updateAmountBySubscriptionId(subscriptionId: UUID, newAmount: Double)
 }

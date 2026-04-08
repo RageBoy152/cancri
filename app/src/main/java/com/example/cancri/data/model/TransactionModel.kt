@@ -34,5 +34,11 @@ data class TransactionModel(
     @ColumnInfo(name = "description")
     val description: String,
     @ColumnInfo(name = "subscription")
-    val subscriptionId: UUID?
+    val subscriptionId: UUID?,
+
+    // ── NEW: which spending category this transaction belongs to ──────────
+    // Matches the category names used in MainActivity:
+    // "Bills", "Subscriptions", "Debts", "Savings Goals", or null for uncategorised
+    @ColumnInfo(name = "category")
+    val category: String? = null
 )

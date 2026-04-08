@@ -39,10 +39,21 @@
             android:exported="false"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
-        <!-- MainActivity is where onboarding leads to -->
+        <activity
+            android:name=".WelcomeActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Cancri" />
+
         <activity
             android:name=".MainActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".SubscriptionsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Cancri" />
 
     </application>
 

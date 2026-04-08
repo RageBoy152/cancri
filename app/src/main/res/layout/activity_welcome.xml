@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Cancri - money management app
+    Programming for Mobile - COMP08068
+    Team - Matt Miller, Kyle McNamee, Jaimie Neilson, Andrew Gilmour
+    Date created - 24/03/26
+    Ver 1.0
+
+    WelcomeActivity layout — shown once after onboarding completes.
+    Displays a time-aware greeting + the user's name over the nature background.
+    Fades out and launches MainActivity after ~3 seconds.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/green_dark">
+
+    <!-- Nature background photo -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg_nature" />
+
+    <!-- Vignette overlay -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/vignette" />
+
+    <!-- Centred greeting content -->
+    <LinearLayout
+        android:id="@+id/welcomeContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="40dp">
+
+        <!-- Time-of-day greeting e.g. "Good morning," -->
+        <TextView
+            android:id="@+id/welcomeTimeGreeting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0"
+            android:fontFamily="serif"
+            android:letterSpacing="0.05"
+            android:text="Good morning,"
+            android:textColor="@color/text_white_75"
+            android:textSize="18sp" />
+
+        <!-- User's name from onboarding -->
+        <TextView
+            android:id="@+id/welcomeName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:alpha="0"
+            android:fontFamily="serif"
+            android:gravity="center"
+            android:text="Matthew"
+            android:textColor="@color/text_white"
+            android:textSize="52sp"
+            android:textStyle="italic" />
+
+        <!-- Subtitle -->
+        <TextView
+            android:id="@+id/welcomeSub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:alpha="0"
+            android:fontFamily="serif"
+            android:letterSpacing="0.03"
+            android:text="Welcome to Cancri"
+            android:textColor="@color/text_white_60"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <!-- "Your dashboard is ready" hint at the bottom -->
+    <LinearLayout
+        android:id="@+id/welcomeHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="56dp"
+        android:alpha="0"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="serif"
+            android:text="your dashboard is ready"
+            android:textColor="@color/text_white_60"
+            android:textSize="12sp" />
+
+        <!-- Down arrow icon -->
+        <ImageView
+            android:id="@+id/welcomeArrow"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="6dp"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_arrow_down"
+            android:tint="@color/text_white_60" />
+
+    </LinearLayout>
+
+</FrameLayout>

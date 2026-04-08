@@ -1,3 +1,4 @@
+
 package com.example.cancri.data.model
 
 import androidx.room.ColumnInfo
