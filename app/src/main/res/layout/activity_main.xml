@@ -17,6 +17,7 @@
     <!-- ── HERO HEADER ─────────────────────────────────────────────────── -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/heroSection"
+        android:background="@color/black"
         android:layout_width="match_parent"
         android:layout_height="240dp">
 
@@ -26,6 +27,7 @@
             android:contentDescription="@null"
             android:scaleType="centerCrop"
             android:src="@drawable/bg_nature"
+            android:alpha="0.5"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,7 +40,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingStart="20dp"
             android:paddingTop="48dp"
@@ -57,7 +59,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2 Day Streak  🔥🔥"
-                    android:textColor="@color/text_white_75"
+                    android:textColor="@color/text_secondary"
                     android:textSize="11sp" />
 
             </LinearLayout>
@@ -68,32 +70,30 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:text="Good morning,"
-                android:textColor="@color/text_white_75"
+                android:textColor="@color/text_secondary"
                 android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/heroName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="serif"
                 android:text="Matthew"
                 android:textColor="@color/text_white"
-                android:textSize="34sp"
-                android:textStyle="italic" />
+                android:textStyle="bold"
+                android:textSize="34sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="Your monthly goals are,"
-                android:textColor="@color/text_white_75"
+                android:textColor="@color/text_secondary"
                 android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/heroGoalStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="serif"
                 android:text="On Track"
                 android:textColor="@color/green_accent"
                 android:textSize="26sp"
@@ -105,8 +105,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="SAVED £20.99 MORE THIS MONTH"
-                android:textColor="@color/text_white_60"
-                android:textSize="10sp" />
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -117,7 +117,7 @@
         android:id="@+id/whitePanel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="216dp"
+        android:layout_marginTop="240dp"
         android:background="@color/surface_page"
         android:clipToPadding="false"
         android:elevation="4dp"
@@ -297,7 +297,7 @@
                 android:layout_height="24dp"
                 android:contentDescription="Dashboard"
                 android:src="@drawable/ic_shield_budget_better"
-                android:tint="@color/green_primary" />
+                app:tint="@color/green_primary" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -337,14 +337,14 @@
                 android:layout_height="24dp"
                 android:contentDescription="Settings"
                 android:src="@drawable/ic_shield_save_money"
-                android:tint="@color/text_muted" />
+                android:tint="@color/text_tertiary" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:text="Settings"
-                android:textColor="@color/text_muted"
+                android:textColor="@color/text_tertiary"
                 android:textSize="10sp" />
 
         </LinearLayout>
@@ -455,7 +455,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
             android:text="Name (optional)"
-            android:textColor="@color/text_hint"
+            android:textColor="@color/text_tertiary"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -485,7 +485,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
             android:text="Category"
-            android:textColor="@color/text_hint"
+            android:textColor="@color/text_tertiary"
             android:textSize="12sp"
             android:textStyle="bold" />
 

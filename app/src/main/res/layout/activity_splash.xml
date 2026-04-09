@@ -43,7 +43,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:alpha="0"
-            android:fontFamily="serif"
             android:text="Cancri"
             android:textColor="#FFFFFF"
             android:textSize="56sp"

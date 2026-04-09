@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cancri"
-            android:textColor="@color/text_white_75"
+            android:textColor="@color/text_tertiary"
             android:textSize="13sp" />
 
         <TextView
@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:text="PROFILE"
                 android:textSize="11sp"
-                android:textColor="@color/text_muted"
+                android:textColor="@color/text_tertiary"
                 android:letterSpacing="0.08"
                 android:layout_marginBottom="12dp" />
 
@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:text="MONTHLY BUDGETS"
                 android:textSize="11sp"
-                android:textColor="@color/text_muted"
+                android:textColor="@color/text_tertiary"
                 android:letterSpacing="0.08"
                 android:layout_marginBottom="12dp" />
 

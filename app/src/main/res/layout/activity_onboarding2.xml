@@ -42,7 +42,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:fontFamily="serif"
             android:text="Cancri"
             android:textColor="#FFFFFF"
             android:textSize="18sp"

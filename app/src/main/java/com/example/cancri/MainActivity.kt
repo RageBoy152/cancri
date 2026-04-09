@@ -187,7 +187,7 @@ class MainActivity : AppCompatActivity() {
 
         if (saved >= 0) {
             savedNoteTv.text = "SAVED %.2f MORE THIS MONTH".format(saved)
-            savedNoteTv.setTextColor(getColor(R.color.text_white_75))
+            savedNoteTv.setTextColor(getColor(R.color.text_tertiary))
         } else {
             savedNoteTv.text = "OVER BUDGET BY %.2f".format(-saved)
             savedNoteTv.setTextColor(getColor(R.color.bar_red))
@@ -203,7 +203,7 @@ class MainActivity : AppCompatActivity() {
             val empty = TextView(this).apply {
                 text     = "No subscriptions yet"
                 textSize = 13f
-                setTextColor(getColor(R.color.text_muted))
+                setTextColor(getColor(R.color.text_tertiary))
                 setPadding(0, 8, 0, 8)
             }
             container.addView(empty)

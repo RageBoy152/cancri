@@ -57,7 +57,7 @@ class SubscriptionsActivity : AppCompatActivity() {
             val empty = TextView(this).apply {
                 text     = "No subscriptions yet"
                 textSize = 14f
-                setTextColor(getColor(R.color.text_muted))
+                setTextColor(getColor(R.color.text_tertiary))
                 setPadding(0, 24, 0, 0)
             }
             container.addView(empty)

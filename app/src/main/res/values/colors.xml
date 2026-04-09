@@ -6,9 +6,9 @@
 
     <!-- Brand greens -->
     <color name="green_dark">#1B4332</color>
-    <color name="green_primary">#2D6A4F</color>
+    <color name="green_primary">#276B49</color>
     <color name="green_light">#52B788</color>
-    <color name="green_accent">#52D68A</color>
+    <color name="green_accent">#9CDF47</color>
 
     <!-- UI surfaces -->
     <color name="surface_page">#F7F7F5</color>
@@ -18,13 +18,10 @@
     <color name="surface_amount">#F5F5F5</color>
 
     <!-- Text -->
-    <color name="text_primary">#1A1A1A</color>
-    <color name="text_secondary">#555555</color>
-    <color name="text_muted">#999999</color>
-    <color name="text_hint">#888888</color>
-    <color name="text_white">#FFFFFFFF</color>
-    <color name="text_white_75">#BFFFFFFF</color>
-    <color name="text_white_60">#99FFFFFF</color>
+    <color name="text_primary">#1C241C</color>
+    <color name="text_secondary">#CCCCCC</color>
+    <color name="text_tertiary">#9EA39E</color>
+    <color name="text_white">#F0F0F0</color>
 
     <!-- Status bar colours -->
     <color name="bar_green">#2D6A4F</color>
