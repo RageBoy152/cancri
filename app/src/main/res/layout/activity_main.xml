@@ -160,7 +160,7 @@
                             android:layout_weight="1"
                             android:text="Spending Breakdown"
                             android:textColor="@color/text_primary"
-                            android:textSize="15sp"
+                            android:textSize="20sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -170,7 +170,7 @@
                             android:clickable="true"
                             android:focusable="true"
                             android:text="EDIT GOALS ›"
-                            android:textColor="@color/green_primary"
+                            android:textColor="@color/text_tertiary"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
@@ -239,7 +239,7 @@
                             android:layout_weight="1"
                             android:text="Subscriptions"
                             android:textColor="@color/text_primary"
-                            android:textSize="15sp"
+                            android:textSize="20sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -249,7 +249,7 @@
                             android:clickable="true"
                             android:focusable="true"
                             android:text="EDIT ›"
-                            android:textColor="@color/green_primary"
+                            android:textColor="@color/text_tertiary"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 

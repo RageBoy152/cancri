@@ -8,6 +8,7 @@ package com.example.cancri
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -25,7 +26,6 @@ class SettingsActivity : AppCompatActivity() {
         prefs = getSharedPreferences("cancri_prefs", MODE_PRIVATE)
 
         setupNameField()
-        setupBackButton()
     }
 
     private fun setupNameField() {
@@ -46,12 +46,6 @@ class SettingsActivity : AppCompatActivity() {
             prefs.edit().putString("user_name", newName).apply()
             Toast.makeText(this, "Settings saved!", Toast.LENGTH_SHORT).show()
             finish() // Goes back to MainActivity
-        }
-    }
-
-    private fun setupBackButton() {
-        findViewById<Button>(R.id.btnBack).setOnClickListener {
-            finish()
         }
     }
 }
