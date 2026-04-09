@@ -13,7 +13,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/green_dark">
+    android:background="@color/black">
 
     <!-- Nature background photo -->
     <ImageView
@@ -21,6 +21,7 @@
         android:layout_height="match_parent"
         android:contentDescription="@null"
         android:scaleType="centerCrop"
+        android:alpha="0.8"
         android:src="@drawable/bg_nature" />
 
     <!-- Vignette overlay -->
@@ -45,10 +46,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:alpha="0"
-            android:fontFamily="serif"
             android:letterSpacing="0.05"
             android:text="Good morning,"
-            android:textColor="@color/text_white_75"
+            android:textColor="@color/text_secondary"
             android:textSize="18sp" />
 
         <!-- User's name from onboarding -->
@@ -58,12 +58,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:alpha="0"
-            android:fontFamily="serif"
             android:gravity="center"
             android:text="Matthew"
             android:textColor="@color/text_white"
             android:textSize="52sp"
-            android:textStyle="italic" />
+            android:textStyle="bold" />
 
         <!-- Subtitle -->
         <TextView
@@ -72,10 +71,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:alpha="0"
-            android:fontFamily="serif"
             android:letterSpacing="0.03"
             android:text="Welcome to Cancri"
-            android:textColor="@color/text_white_60"
+            android:textColor="@color/text_white"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -94,9 +92,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="serif"
             android:text="your dashboard is ready"
-            android:textColor="@color/text_white_60"
+            android:textColor="@color/text_tertiary"
             android:textSize="12sp" />
 
         <!-- Down arrow icon -->
@@ -107,7 +104,7 @@
             android:layout_marginTop="6dp"
             android:contentDescription="@null"
             android:src="@drawable/ic_arrow_down"
-            android:tint="@color/text_white_60" />
+            android:tint="@color/text_tertiary" />
 
     </LinearLayout>
 

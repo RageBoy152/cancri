@@ -20,15 +20,12 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.lifecycleScope
 import com.example.cancri.data.AppDatabase
 import com.example.cancri.data.SubscriptionType
 import com.example.cancri.data.model.SubscriptionModel
 import com.example.cancri.data.model.TransactionModel
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -39,7 +36,7 @@ import java.time.Instant
 import java.util.Calendar
 import java.util.UUID
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
 
     private val dbScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private lateinit var database: AppDatabase
@@ -63,16 +60,10 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
         setContentView(R.layout.activity_main)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
-            insets
-        }
-
         database = AppDatabase.getDatabase(this, dbScope)
 
         setupHero()
-        setupBottomNav()
+        setupScreenActions()
         setupAddTransactionDrawer()
         animatePanelEntry()
         observeTransactions()
@@ -186,7 +177,7 @@ class MainActivity : AppCompatActivity() {
 
         if (saved >= 0) {
             savedNoteTv.text = "SAVED %.2f MORE THIS MONTH".format(saved)
-            savedNoteTv.setTextColor(getColor(R.color.text_white_75))
+            savedNoteTv.setTextColor(getColor(R.color.text_tertiary))
         } else {
             savedNoteTv.text = "OVER BUDGET BY %.2f".format(-saved)
             savedNoteTv.setTextColor(getColor(R.color.bar_red))
@@ -202,7 +193,7 @@ class MainActivity : AppCompatActivity() {
             val empty = TextView(this).apply {
                 text     = "No subscriptions yet"
                 textSize = 13f
-                setTextColor(getColor(R.color.text_muted))
+                setTextColor(getColor(R.color.text_tertiary))
                 setPadding(0, 8, 0, 8)
             }
             container.addView(empty)
@@ -228,16 +219,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    //  Bottom nav
-    private fun setupBottomNav() {
-        findViewById<FloatingActionButton>(R.id.fabAddTransaction).setOnClickListener { openDrawer() }
-        findViewById<LinearLayout>(R.id.navSettings).setOnClickListener {
-            Toast.makeText(this, "Settings coming soon", Toast.LENGTH_SHORT).show()
-        }
+    private fun setupScreenActions() {
         // EDIT  launches the subscriptions edit screen
         findViewById<TextView>(R.id.btnEditSubs).setOnClickListener {
             startActivity(android.content.Intent(this, SubscriptionsActivity::class.java))
         }
+    }
+
+    override fun onBottomNavFabClicked() {
+        openDrawer()
     }
 
     //  Add Transaction drawer

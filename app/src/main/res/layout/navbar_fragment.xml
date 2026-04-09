@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottomNav"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:background="@color/surface_card"
+    android:elevation="8dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingBottom="8dp">
+
+    <LinearLayout
+        android:id="@+id/navDashboard"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/navDashboardIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:contentDescription="Dashboard"
+            android:src="@drawable/ic_lucide_house"
+            app:tint="@color/text_tertiary" />
+
+        <TextView
+            android:id="@+id/navDashboardLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Dashboard"
+            android:textColor="@color/text_tertiary"
+            android:textSize="10sp" />
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddTransaction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="Add transaction"
+        android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/green_primary"
+        app:elevation="6dp"
+        app:fabSize="normal"
+        app:tint="@color/white" />
+
+    <LinearLayout
+        android:id="@+id/navSettings"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/navSettingsIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:contentDescription="Settings"
+            android:src="@drawable/ic_lucide_settings"
+            app:tint="@color/text_tertiary" />
+
+        <TextView
+            android:id="@+id/navSettingsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Settings"
+            android:textColor="@color/text_tertiary"
+            android:textSize="10sp" />
+
+    </LinearLayout>
+
+</LinearLayout>
