@@ -10,6 +10,7 @@ package com.example.cancri
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,12 +21,15 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.lifecycleScope
 import com.example.cancri.data.AppDatabase
 import com.example.cancri.data.SubscriptionType
 import com.example.cancri.data.model.SubscriptionModel
 import com.example.cancri.data.model.TransactionModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -60,6 +64,12 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
         supportActionBar?.hide()
         setContentView(R.layout.activity_main)
 
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
+            insets
+        }
+
         database = AppDatabase.getDatabase(this, dbScope)
 
         setupHero()
@@ -69,11 +79,29 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
         observeTransactions()
         observeSubscriptions()
     }
+    override fun onResume() {
+        super.onResume()
+        val prefs     = getSharedPreferences("cancri_prefs", MODE_PRIVATE)
+        val firstName = prefs.getString("user_first_name", "") ?: ""
+        val lastName  = prefs.getString("user_last_name", "") ?: ""
+        val userName  = when {
+            firstName.isNotEmpty() && lastName.isNotEmpty() -> "$firstName $lastName"
+            firstName.isNotEmpty() -> firstName
+            else -> prefs.getString("user_name", "there") ?: "there"
+        }
+        findViewById<TextView>(R.id.heroName).text = userName
+    }
 
     //  Hero
     private fun setupHero() {
-        val prefs    = getSharedPreferences("cancri_prefs", MODE_PRIVATE)
-        val userName = prefs.getString("user_name", "there") ?: "there"
+        val prefs     = getSharedPreferences("cancri_prefs", MODE_PRIVATE)
+        val firstName = prefs.getString("user_first_name", "") ?: ""
+        val lastName  = prefs.getString("user_last_name", "") ?: ""
+        val userName  = when {
+            firstName.isNotEmpty() && lastName.isNotEmpty() -> "$firstName $lastName"
+            firstName.isNotEmpty() -> firstName
+            else -> prefs.getString("user_name", "there") ?: "there"
+        }
         findViewById<TextView>(R.id.heroGreeting).text = getTimeGreeting()
         findViewById<TextView>(R.id.heroName).text     = userName
     }
@@ -219,7 +247,12 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
         }
     }
 
+    //  Bottom nav
     private fun setupScreenActions() {
+        findViewById<FloatingActionButton>(R.id.fabAddTransaction).setOnClickListener { openDrawer() }
+        findViewById<LinearLayout>(R.id.navSettings).setOnClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
+        }
         // EDIT  launches the subscriptions edit screen
         findViewById<TextView>(R.id.btnEditSubs).setOnClickListener {
             startActivity(android.content.Intent(this, SubscriptionsActivity::class.java))
