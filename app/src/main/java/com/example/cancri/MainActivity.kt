@@ -10,7 +10,6 @@ package com.example.cancri
 
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -29,7 +28,6 @@ import com.example.cancri.data.AppDatabase
 import com.example.cancri.data.SubscriptionType
 import com.example.cancri.data.model.SubscriptionModel
 import com.example.cancri.data.model.TransactionModel
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -249,11 +247,8 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
 
     //  Bottom nav
     private fun setupScreenActions() {
-        findViewById<FloatingActionButton>(R.id.fabAddTransaction).setOnClickListener { openDrawer() }
-        findViewById<LinearLayout>(R.id.navSettings).setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
-        }
-        // EDIT  launches the subscriptions edit screen
+        // Bottom nav click handling lives in NavbarFragment.
+        // Keep MainActivity wiring limited to views in activity_main.
         findViewById<TextView>(R.id.btnEditSubs).setOnClickListener {
             startActivity(android.content.Intent(this, SubscriptionsActivity::class.java))
         }
