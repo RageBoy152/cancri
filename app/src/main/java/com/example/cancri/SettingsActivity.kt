@@ -8,7 +8,6 @@ package com.example.cancri
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -31,7 +30,6 @@ class SettingsActivity : AppCompatActivity() {
     private fun setupNameField() {
         val nameInput = findViewById<TextInputEditText>(R.id.inputUserName)
 
-        // Load the saved name so the field isn't blank when they open settings
         val savedName = prefs.getString("user_name", "") ?: ""
         nameInput.setText(savedName)
 
@@ -45,7 +43,7 @@ class SettingsActivity : AppCompatActivity() {
 
             prefs.edit().putString("user_name", newName).apply()
             Toast.makeText(this, "Settings saved!", Toast.LENGTH_SHORT).show()
-            finish() // Goes back to MainActivity
+            finish()
         }
     }
 }
