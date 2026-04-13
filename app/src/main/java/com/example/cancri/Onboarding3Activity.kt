@@ -19,6 +19,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.cancri.notifications.NotificationScheduler
 
 class Onboarding3Activity : AppCompatActivity() {
 
@@ -91,6 +92,9 @@ class Onboarding3Activity : AppCompatActivity() {
                 Toast.makeText(this, "Please select at least one goal", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
+            NotificationScheduler.scheduleDaily(this)
+
             // ── Navigate to WelcomeActivity instead of MainActivity ──
             // Name is already saved in SharedPreferences by Onboarding2Activity.
             // Goals can be saved here if needed in future.
