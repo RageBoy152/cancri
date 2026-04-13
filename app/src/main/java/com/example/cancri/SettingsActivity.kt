@@ -36,8 +36,8 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun updateHero() {
-        val heroName = findViewById<TextView>(R.id.settingsHeroName)
-        val avatar   = findViewById<TextView>(R.id.settingsAvatar)
+//        val heroName = findViewById<TextView>(R.id.settingsHeroName)
+//        val avatar   = findViewById<TextView>(R.id.settingsAvatar)
         val nameRow  = findViewById<TextView>(R.id.inputUserName)
 
         val firstName = prefs.getString("user_first_name", "") ?: ""
@@ -53,13 +53,13 @@ class SettingsActivity : AppCompatActivity() {
             prefs.getString("user_name", "there") ?: "there"
         }
 
-        heroName.text = displayName
-        avatar.text   = initials.ifEmpty { "?" }
+//        heroName.text = displayName
+//        avatar.text   = initials.ifEmpty { "?" }
         nameRow.text  = if (firstName.isEmpty()) "Tap to edit" else "$firstName $lastName".trim()
 
-        avatar.backgroundTintList = android.content.res.ColorStateList.valueOf(
-            android.graphics.Color.parseColor(color)
-        )
+//        avatar.backgroundTintList = android.content.res.ColorStateList.valueOf(
+//            android.graphics.Color.parseColor(color)
+//        )
     }
 
     private fun setupProfileRow() {
@@ -69,9 +69,9 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun setupBackButton() {
-        findViewById<Button>(R.id.btnBack).setOnClickListener {
-            finish()
-        }
+//        findViewById<Button>(R.id.btnBack).setOnClickListener {
+//            finish()
+//        }
     }
 
     private fun setupSaveAndReturnButton() {
