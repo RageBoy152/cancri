@@ -6,12 +6,13 @@
 
 package com.example.cancri
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
-import android.widget.Toast
+import android.widget.TextView
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.textfield.TextInputEditText
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -24,25 +25,60 @@ class SettingsActivity : AppCompatActivity() {
 
         prefs = getSharedPreferences("cancri_prefs", MODE_PRIVATE)
 
-        setupNameField()
+        setupBackButton()
+        setupSaveAndReturnButton()
     }
 
-    private fun setupNameField() {
-        val nameInput = findViewById<TextInputEditText>(R.id.inputUserName)
+    override fun onResume() {
+        super.onResume()
+        updateHero()
+        setupProfileRow()
+    }
 
-        val savedName = prefs.getString("user_name", "") ?: ""
-        nameInput.setText(savedName)
+    private fun updateHero() {
+        val heroName = findViewById<TextView>(R.id.settingsHeroName)
+        val avatar   = findViewById<TextView>(R.id.settingsAvatar)
+        val nameRow  = findViewById<TextView>(R.id.inputUserName)
 
-        findViewById<Button>(R.id.btnSaveSettings).setOnClickListener {
-            val newName = nameInput.text?.toString()?.trim()
+        val firstName = prefs.getString("user_first_name", "") ?: ""
+        val lastName  = prefs.getString("user_last_name", "") ?: ""
+        val color     = prefs.getString("avatar_color", "#52B788") ?: "#52B788"
 
-            if (newName.isNullOrEmpty()) {
-                Toast.makeText(this, "Please enter a name", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+        val initials = buildString {
+            if (firstName.isNotEmpty()) append(firstName.first().uppercase())
+            if (lastName.isNotEmpty()) append(lastName.first().uppercase())
+        }
 
-            prefs.edit().putString("user_name", newName).apply()
-            Toast.makeText(this, "Settings saved!", Toast.LENGTH_SHORT).show()
+        val displayName = firstName.ifEmpty {
+            prefs.getString("user_name", "there") ?: "there"
+        }
+
+        heroName.text = displayName
+        avatar.text   = initials.ifEmpty { "?" }
+        nameRow.text  = if (firstName.isEmpty()) "Tap to edit" else "$firstName $lastName".trim()
+
+        avatar.backgroundTintList = android.content.res.ColorStateList.valueOf(
+            android.graphics.Color.parseColor(color)
+        )
+    }
+
+    private fun setupProfileRow() {
+        findViewById<LinearLayout>(R.id.settingsNameRow).setOnClickListener {
+//            startActivity(Intent(this, EditProfileActivity::class.java)) TODO: error here??
+        }
+    }
+
+    private fun setupBackButton() {
+        findViewById<Button>(R.id.btnBack).setOnClickListener {
+            finish()
+        }
+    }
+
+    private fun setupSaveAndReturnButton() {
+        findViewById<Button>(R.id.btnSaveAndReturn).setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            startActivity(intent)
             finish()
         }
     }

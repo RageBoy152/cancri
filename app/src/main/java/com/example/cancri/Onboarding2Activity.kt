@@ -1,10 +1,10 @@
 /* Cancri - money management app
-Programming for Mobile - COMP08068
-Team - Matt Miller, Kyle McNamee, Jaimie Neilson, Andrew Gilmour
-Date created - 24/03/26
-Ver 1.0
-Ver 1.1 Created 08/04/26
- */
+   Programming for Mobile - COMP08068
+   Team - Matt Miller, Kyle McNamee, Jaimie Neilson, Andrew Gilmour
+   Date created - 24/03/26
+   Ver 1.0
+   Ver 1.1 Created 08/04/26
+*/
 
 package com.example.cancri
 
@@ -29,21 +29,15 @@ class Onboarding2Activity : AppCompatActivity() {
 
         val card = findViewById<LinearLayout>(R.id.onboarding2Card)
 
-        // Slide up from off-screen bottom
-        val slideUp = TranslateAnimation(
-            0f, 0f,
-            800f, 0f
-        ).apply {
+        val slideUp = TranslateAnimation(0f, 0f, 800f, 0f).apply {
             duration = 700
             interpolator = DecelerateInterpolator()
         }
 
-        // Fade in at the same time
         val fadeIn = AlphaAnimation(0f, 1f).apply {
             duration = 700
         }
 
-        // Combine both into one AnimationSet
         val animSet = AnimationSet(true).apply {
             addAnimation(slideUp)
             addAnimation(fadeIn)
@@ -53,23 +47,25 @@ class Onboarding2Activity : AppCompatActivity() {
 
         card.startAnimation(animSet)
 
-        val etName = findViewById<EditText>(R.id.etName)
+        val etName  = findViewById<EditText>(R.id.etName)
         val btnNext = findViewById<Button>(R.id.btnNext)
 
         btnNext.setOnClickListener {
             val name = etName.text.toString().trim()
+
             if (name.isEmpty()) {
                 Toast.makeText(this, "Please enter your name", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // ── Save name to SharedPreferences for WelcomeActivity & MainActivity ──
+            // Save to all name keys so dashboard and settings stay in sync
             getSharedPreferences("cancri_prefs", MODE_PRIVATE)
                 .edit()
                 .putString("user_name", name)
+                .putString("user_first_name", name)
+                .putString("user_last_name", "")
                 .apply()
 
-            // Pass the name to Onboarding3 via Intent extra (existing behaviour)
             val intent = Intent(this, Onboarding3Activity::class.java)
             intent.putExtra("USER_NAME", name)
             startActivity(intent)
