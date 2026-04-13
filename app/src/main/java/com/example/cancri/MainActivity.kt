@@ -67,12 +67,6 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
         supportActionBar?.hide()
         setContentView(R.layout.activity_main)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(bars.left, bars.top, bars.right, bars.bottom)
-            insets
-        }
-
         database = AppDatabase.getDatabase(this, dbScope)
 
         setupHero()

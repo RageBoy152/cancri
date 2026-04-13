@@ -1,107 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/green_primary">
+    android:orientation="vertical"
+    android:background="@color/surface_page">
 
     <!-- Hero header -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:orientation="vertical"
-        android:paddingHorizontal="24dp">
-
-        <Button
-            android:id="@+id/btnBack"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="← Back"
-            android:textSize="13sp"
-            android:textColor="@color/text_white"
-            android:layout_marginBottom="28dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/settingsAvatar"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:gravity="center"
-                android:text="question mark"
-                android:textSize="20sp"
-                android:textColor="@color/text_white"
-                android:background="@layout/bg_avatar"
-                android:layout_marginEnd="14dp" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Signed in as"
-                    android:textColor="@color/text_tertiary"
-                    android:textSize="12sp"
-                    android:layout_marginBottom="2dp" />
-
-                <TextView
-                    android:id="@+id/settingsHeroName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="there"
-                    android:textColor="@color/text_white"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
-
-    <!-- ── OLD Header ── -->
 <!--    <LinearLayout-->
 <!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="56dp"-->
-<!--        android:gravity="center_vertical"-->
-<!--        android:orientation="horizontal">-->
+<!--        android:layout_height="72dp"-->
+<!--        android:orientation="vertical"-->
+<!--        android:paddingHorizontal="24dp">-->
 
-<!--        <TextView-->
-<!--            android:layout_width="0dp"-->
+<!--        <Button-->
+<!--            android:id="@+id/btnBack"-->
+<!--            style="@style/Widget.Material3.Button.OutlinedButton"-->
+<!--            android:layout_width="wrap_content"-->
 <!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:gravity="center"-->
-<!--            android:text="Settings"-->
-<!--            android:textColor="@color/text_primary"-->
-<!--            android:textSize="20sp"-->
-<!--            android:textStyle="bold" />-->
+<!--            android:text="← Back"-->
+<!--            android:textSize="13sp"-->
+<!--            android:textColor="@color/text_white"-->
+<!--            android:layout_marginBottom="28dp" />-->
 
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:gravity="center_vertical">-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/settingsAvatar"-->
+<!--                android:layout_width="48dp"-->
+<!--                android:layout_height="48dp"-->
+<!--                android:gravity="center"-->
+<!--                android:text="question mark"-->
+<!--                android:textSize="20sp"-->
+<!--                android:textColor="@color/text_white"-->
+<!--                android:background="@layout/bg_avatar"-->
+<!--                android:layout_marginEnd="14dp" />-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical">-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Signed in as"-->
+<!--                    android:textColor="@color/text_tertiary"-->
+<!--                    android:textSize="12sp"-->
+<!--                    android:layout_marginBottom="2dp" />-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/settingsHeroName"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="there"-->
+<!--                    android:textColor="@color/text_white"-->
+<!--                    android:textSize="18sp"-->
+<!--                    android:textStyle="bold" />-->
+
+<!--            </LinearLayout>-->
+<!--        </LinearLayout>-->
 <!--    </LinearLayout>-->
+
+    <!-- ── OLD Header ── -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingVertical="16dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Settings"
+            android:textColor="@color/text_primary"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
 
     <!-- Main panel -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/settingsPanel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="bottom"
-        android:background="@color/surface_page"
-        android:layout_marginTop="72dp">
+        android:layout_weight="1"
+        android:background="@color/surface_page">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="8dp"
-            android:paddingBottom="32dp">
+            android:orientation="vertical">
 
             <!-- PROFILE section -->
             <TextView
@@ -123,15 +121,14 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="12dp"
-                android:background="@drawable/bg_card">
+                android:background="@drawable/card_shape">
 
                 <LinearLayout
                     android:id="@+id/settingsNameRow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="14dp">
+                    android:gravity="center_vertical">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -174,8 +171,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:orientation="horizontal"
-                    android:padding="14dp"
                     android:gravity="center_vertical">
 
                     <LinearLayout
@@ -243,13 +240,12 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="28dp"
-                android:background="@drawable/bg_card">
+                android:background="@drawable/card_shape">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="14dp">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0dp"
@@ -277,7 +273,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="14dp">
+                    android:layout_marginTop="12dp">
 
                     <TextView
                         android:layout_width="0dp"
@@ -309,4 +305,4 @@
         android:elevation="12dp"
         tools:layout="@layout/navbar_fragment" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>
