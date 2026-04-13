@@ -136,9 +136,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Edit Profile"
+                            android:textColor="@color/text_tertiary"
                             android:textSize="11sp"
-                            android:textColor="@color/text_secondary"
-                            android:layout_marginBottom="4dp" />
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/inputUserName"
@@ -181,9 +181,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Currency"
+                            android:textColor="@color/text_tertiary"
                             android:textSize="11sp"
-                            android:textColor="@color/text_secondary"
-                            android:layout_marginBottom="4dp" />
+                            android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -245,8 +245,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1.1"
-                        android:textSize="15sp"
-                        android:textColor="@color/text_secondary" />
+                        android:textColor="@color/text_tertiary"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -273,8 +274,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="COMP08068"
-                        android:textSize="13sp"
-                        android:textColor="@color/text_secondary" />
+                        android:textColor="@color/text_tertiary"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
             </LinearLayout>
