@@ -28,17 +28,17 @@
         <activity
             android:name=".Onboarding1Activity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.Cancri" />
 
         <activity
             android:name=".Onboarding2Activity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.Cancri" />
 
         <activity
             android:name=".Onboarding3Activity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.Cancri" />
 
         <activity
             android:name=".WelcomeActivity"

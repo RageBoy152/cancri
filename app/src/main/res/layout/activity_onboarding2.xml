@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,18 +18,17 @@
         android:layout_height="match_parent"
         android:background="@drawable/vignette" />
 
-    <!-- Frosted card — taller with more padding -->
+    <!-- Card -->
     <LinearLayout
         android:id="@+id/onboarding2Card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_margin="16dp"
-        android:layout_marginBottom="40dp"
-        android:background="@drawable/bg_card"
+        android:background="@drawable/onboarding_card_shape"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="36dp">
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="32dp">
 
         <!-- Logo -->
         <ImageView
@@ -43,37 +43,36 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:text="Cancri"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            android:textStyle="italic" />
+            android:textColor="@color/text_white"
+            android:textSize="18sp" />
 
         <!-- Headline -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Setting You Up For Success"
-            android:textColor="#8BC34A"
+            android:layout_marginBottom="8dp"
+            android:text="Setting you up for success"
+            android:textColor="@color/green_accent"
             android:textSize="26sp"
-            android:textStyle="bold" />
+            android:textFontWeight="400" />
 
         <!-- Subtitle -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:text="To start your journey, please tell us about you"
-            android:textColor="#CCFFFFFF"
+            android:textColor="@color/text_secondary"
             android:textSize="14sp" />
 
         <!-- Name label -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="32dp"
             android:text="What should we call you?"
-            android:textColor="#CCFFFFFF"
-            android:textSize="13sp" />
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp" />
 
         <!-- Name input -->
         <EditText
@@ -93,12 +92,12 @@
         <Button
             android:id="@+id/btnNext"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/btn_green"
+            android:layout_height="wrap_content"
             android:text="Next"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp" />
+            android:layout_marginTop="32dp"
+            android:textSize="14sp"
+            app:backgroundTint="@null"
+            android:background="@drawable/button_main_shape"/>
 
     </LinearLayout>
 

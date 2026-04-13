@@ -5,9 +5,8 @@
     <color name="white">#FFFFFFFF</color>
 
     <!-- Brand greens -->
-    <color name="green_dark">#1B4332</color>
     <color name="green_primary">#276B49</color>
-    <color name="green_light">#52B788</color>
+    <color name="green_light">#398E63</color>
     <color name="green_accent">#9CDF47</color>
 
     <!-- UI surfaces -->
