@@ -38,11 +38,14 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Calendar
+import java.time.ZoneId
 
 class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
 
     private val dbScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private lateinit var database: AppDatabase
+    private var latestTransactions: List<TransactionModel> = emptyList()
+    private var latestSubscriptions: List<SubscriptionModel> = emptyList()
 
     private val budgets = mapOf(
         "Bills"         to 900.0,
@@ -53,7 +56,6 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
 
     private val categoryRowIds    = listOf(R.id.catBills, R.id.catSubscriptions, R.id.catDebts, R.id.catSavings)
     private val categoryNames     = listOf("Bills", "Subscriptions", "Debts", "Savings Goals")
-    private val categoryBarColors = listOf(R.color.bar_green, R.color.bar_green, R.color.bar_amber, R.color.bar_red)
     private val categoryIconMap = mapOf(
         "Savings Goals" to R.drawable.ic_lucide_piggy_bank,
         "Debts" to R.drawable.ic_lucide_wallet_cards,
@@ -139,7 +141,8 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
         lifecycleScope.launch {
             database.getTransactionDao().observeAll().collect { transactions ->
                 withContext(Dispatchers.Main) {
-                    updateSpendingBreakdown(transactions)
+                    latestTransactions = transactions
+                    updateSpendingBreakdown(transactions, latestSubscriptions)
                     updateGoalStatus(transactions)
                     updateTransactionsList(transactions)
                 }
@@ -152,6 +155,8 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
         lifecycleScope.launch {
             database.getSubscriptionDao().observeAll().collect { subs ->
                 withContext(Dispatchers.Main) {
+                    latestSubscriptions = subs
+                    updateSpendingBreakdown(latestTransactions, subs)
                     updateSubscriptionsList(subs)
                 }
             }
@@ -159,12 +164,46 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
     }
 
     //  Spending Breakdown
-    private fun updateSpendingBreakdown(transactions: List<TransactionModel>) {
+    private fun updateSpendingBreakdown(
+        transactions: List<TransactionModel>,
+        subscriptions: List<SubscriptionModel>
+    ) {
         val spent = mutableMapOf<String, Double>()
         categoryNames.forEach { spent[it] = 0.0 }
         transactions.forEach { tx ->
             val cat = tx.category ?: return@forEach
             if (spent.containsKey(cat)) spent[cat] = spent[cat]!! + tx.amount
+        }
+
+        val today = java.time.LocalDate.now()
+        val txBySubscriptionId = transactions
+            .filter { it.subscriptionId != null }
+            .groupBy { it.subscriptionId!! }
+
+        val dueSubscriptionsThisMonth = subscriptions.count { sub ->
+            val subTxs = txBySubscriptionId[sub.id].orEmpty()
+            val latest = subTxs.maxByOrNull { it.createdAt } ?: return@count false
+            val lastPaidDate = latest.createdAt.atZone(ZoneId.systemDefault()).toLocalDate()
+
+            when (sub.type) {
+                SubscriptionType.MONTHLY -> true
+                SubscriptionType.YEARLY -> lastPaidDate.monthValue == today.monthValue
+            }
+        }
+
+        val subscriptionsLeftThisMonth = subscriptions.count { sub ->
+            val subTxs = txBySubscriptionId[sub.id].orEmpty()
+            val latest = subTxs.maxByOrNull { it.createdAt } ?: return@count true
+            val lastPaidDate = latest.createdAt.atZone(ZoneId.systemDefault()).toLocalDate()
+            val paidThisMonth = lastPaidDate.year == today.year && lastPaidDate.monthValue == today.monthValue
+
+            when (sub.type) {
+                SubscriptionType.MONTHLY -> !paidThisMonth
+                SubscriptionType.YEARLY -> {
+                    val dueThisMonth = lastPaidDate.monthValue == today.monthValue
+                    dueThisMonth && !paidThisMonth
+                }
+            }
         }
 
         categoryNames.forEachIndexed { i, catName ->
@@ -181,7 +220,57 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
 
             val barFill  = row.findViewById<View>(R.id.catBarFill)
             val statusTv = row.findViewById<TextView>(R.id.catStatus)
-            barFill.setBackgroundColor(getColor(if (catSpent > catBudget) R.color.bar_red else categoryBarColors[i]))
+
+            val paidRatio = if (catBudget <= 0.0) 0.0 else (catSpent / catBudget)
+            val subscriptionsPaidRatio = if (dueSubscriptionsThisMonth <= 0) {
+                1.0
+            } else {
+                ((dueSubscriptionsThisMonth - subscriptionsLeftThisMonth).toDouble() / dueSubscriptionsThisMonth.toDouble())
+                    .coerceIn(0.0, 1.0)
+            }
+
+            val atGoal = kotlin.math.abs(paidRatio - 1) < 0.0001
+
+            val (statusText, statusColor) = when (catName) {
+                "Bills" -> when {
+                    paidRatio == 0.0  -> "build momentum" to R.color.text_tertiary
+                    paidRatio < 0.2  -> "keep up the momentum" to R.color.bar_red
+                    paidRatio < 0.5  -> "you're making good progress" to R.color.bar_red
+                    paidRatio < 1  -> "nearly there" to R.color.bar_amber
+                    else             -> "paid off!" to R.color.green_primary
+                }
+                "Subscriptions" -> {
+                    val color = when {
+                        subscriptionsPaidRatio >= 1.0 -> R.color.green_primary
+                        subscriptionsPaidRatio >= 0.5 -> R.color.bar_amber
+                        else -> R.color.bar_red
+                    }
+                    if (subscriptionsLeftThisMonth == 1) {
+                        "1 subscription left this month" to color
+                    } else {
+                        "$subscriptionsLeftThisMonth subscriptions left this month" to color
+                    }
+                }
+                "Debts" -> when {
+                    paidRatio == 0.0  -> "head on your way" to R.color.text_tertiary
+                    paidRatio < 0.5  -> "you're on your way" to R.color.bar_red
+                    paidRatio < 1.0  -> "nearly there" to R.color.bar_amber
+                    atGoal           -> "target reached!" to R.color.green_primary
+                    else             -> "goal exceeded!" to R.color.green_primary
+                }
+                "Savings Goals" -> when {
+                    paidRatio == 0.0 -> "build toward your goal" to R.color.text_tertiary
+                    paidRatio <= 0.5 -> "building toward your goal" to R.color.bar_red
+                    paidRatio < 1.0  -> "nearly there" to R.color.bar_amber
+                    atGoal           -> "savings goal reached!" to R.color.green_primary
+                    else             -> "your saving extra this month!" to R.color.green_primary
+                }
+                else -> "on target" to R.color.green_primary
+            }
+
+            barFill.setBackgroundColor(getColor(statusColor))
+            statusTv.text = statusText
+            statusTv.setTextColor(getColor(statusColor))
 
             barFill.post {
                 val parentWidth = (barFill.parent as View).width
@@ -197,11 +286,6 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
                 }
             }
 
-            when {
-                catSpent > catBudget        -> { statusTv.text = "OVER BUDGET";  statusTv.setTextColor(getColor(R.color.bar_red)) }
-                catSpent / catBudget > 0.85 -> { statusTv.text = "NEARLY THERE"; statusTv.setTextColor(getColor(R.color.bar_amber)) }
-                else                        -> { statusTv.text = "ON TARGET";    statusTv.setTextColor(getColor(R.color.green_primary)) }
-            }
         }
     }
 
