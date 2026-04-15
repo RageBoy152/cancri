@@ -105,22 +105,27 @@
                         android:divider="@drawable/gap_divider_horizontal_2">
 
                         <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:src="@drawable/cancri_streak_filled" />
-                        <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:src="@drawable/cancri_streak_filled" />
-                        <ImageView
+                            android:id="@+id/streakClaw1"
                             android:layout_width="16dp"
                             android:layout_height="16dp"
                             android:src="@drawable/cancri_streak_outline" />
                         <ImageView
+                            android:id="@+id/streakClaw2"
                             android:layout_width="16dp"
                             android:layout_height="16dp"
                             android:src="@drawable/cancri_streak_outline" />
                         <ImageView
+                            android:id="@+id/streakClaw3"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/cancri_streak_outline" />
+                        <ImageView
+                            android:id="@+id/streakClaw4"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/cancri_streak_outline" />
+                        <ImageView
+                            android:id="@+id/streakClaw5"
                             android:layout_width="16dp"
                             android:layout_height="16dp"
                             android:src="@drawable/cancri_streak_outline" />
@@ -364,4 +369,3 @@
 
 
 </LinearLayout>
-
