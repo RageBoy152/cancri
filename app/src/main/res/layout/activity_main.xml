@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
     Cancri - money management app
     Programming for Mobile - COMP08068
@@ -14,7 +14,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!-- ── HERO HEADER ─────────────────────────────────────────────────── -->
+    <!-- HERO HEADER -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/heroSection"
         android:background="@color/black"
@@ -58,7 +58,7 @@
                     android:id="@+id/streakLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2 Day Streak  🔥🔥"
+                    android:text="2 Day Streak 🔥🔥"
                     android:textColor="@color/text_secondary"
                     android:textSize="11sp" />
 
@@ -104,7 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="SAVED £20.99 MORE THIS MONTH"
+                android:text="SAVED Â£20.99 MORE THIS MONTH"
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp" />
 
@@ -112,7 +112,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- ── WHITE PANEL ─────────────────────────────────────────────────── -->
+    <!-- WHITE PANEL -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/whitePanel"
         android:layout_width="match_parent"
@@ -129,9 +129,9 @@
             android:orientation="vertical"
             android:padding="16dp"
             android:showDividers="middle"
-            android:divider="@drawable/gap_divider">
+            android:divider="@drawable/gap_divider_vertical_8">
 
-            <!-- ── SPENDING BREAKDOWN CARD ──────────────────────────── -->
+            <!-- SPENDING BREAKDOWN CARD -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -153,7 +153,7 @@
                     android:layout_height="wrap_content"
                     android:clickable="true"
                     android:focusable="true"
-                    android:text="EDIT GOALS ›"
+                    android:text="EDIT GOALS >"
                     android:textColor="@color/text_tertiary"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -202,7 +202,7 @@
 
             </LinearLayout>
 
-            <!-- ── SUBSCRIPTIONS CARD ───────────────────────────────── -->
+            <!-- SUBSCRIPTIONS CARD -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -224,7 +224,7 @@
                     android:layout_height="wrap_content"
                     android:clickable="true"
                     android:focusable="true"
-                    android:text="EDIT ›"
+                    android:text="EDIT >"
                     android:textColor="@color/text_tertiary"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -247,7 +247,7 @@
             </LinearLayout>
 
 
-            <!-- ── TRANSACTIONS CARD ───────────────────────────────── -->
+            <!-- TRANSACTIONS CARD -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -277,7 +277,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:showDividers="middle"
-                    android:divider="@drawable/gap_divider"
+                    android:divider="@drawable/gap_divider_vertical_8"
                     android:orientation="vertical" />
 
             </LinearLayout>
@@ -288,170 +288,13 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/bottomNavContainer"
-        android:name="com.example.cancri.NavbarFragment"
+        android:name="com.example.cancri.ui.NavbarFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:elevation="12dp"
         tools:layout="@layout/navbar_fragment" />
 
-    <!-- ── ADD TRANSACTION DRAWER ──────────────────────────────────────── -->
-
-    <View
-        android:id="@+id/drawerScrim"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:alpha="0"
-        android:background="@color/drawer_overlay"
-        android:clickable="true"
-        android:focusable="true"
-        android:visibility="gone" />
-
-    <LinearLayout
-        android:id="@+id/addTransactionDrawer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@color/surface_card"
-        android:elevation="16dp"
-        android:orientation="vertical"
-        android:padding="20dp"
-        android:translationY="2000dp">
-
-        <View
-            android:layout_width="36dp"
-            android:layout_height="4dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="16dp"
-            android:background="#DDDDDD" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:text="Add Transaction"
-            android:textColor="@color/text_primary"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/amountDisplay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_card"
-            android:gravity="center"
-            android:padding="14dp"
-            android:text="0.00"
-            android:textColor="@color/text_primary"
-            android:textSize="28sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="16dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btn5"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
-                android:layout_weight="1"
-                android:text="£5"
-                android:textColor="@color/text_secondary" />
-
-            <Button
-                android:id="@+id/btn10"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
-                android:layout_weight="1"
-                android:text="£10"
-                android:textColor="@color/text_secondary" />
-
-            <Button
-                android:id="@+id/btn20"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
-                android:layout_weight="1"
-                android:text="£20"
-                android:textColor="@color/text_secondary" />
-
-            <Button
-                android:id="@+id/btn50"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="£50"
-                android:textColor="@color/text_secondary" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:text="Name (optional)"
-            android:textColor="@color/text_tertiary"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            app:boxBackgroundColor="@color/surface_input"
-            app:boxCornerRadiusBottomEnd="10dp"
-            app:boxCornerRadiusBottomStart="10dp"
-            app:boxCornerRadiusTopEnd="10dp"
-            app:boxCornerRadiusTopStart="10dp"
-            app:boxStrokeColor="@color/border_light">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/inputName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="e.g. Snacks from shop"
-                android:inputType="text"
-                android:textSize="14sp" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:text="Category"
-            android:textColor="@color/text_tertiary"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-
-        <Spinner
-            android:id="@+id/spinnerCategory"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/bg_card"
-            android:padding="12dp"
-            android:textSize="14sp" />
-
-        <Button
-            android:id="@+id/btnSaveTransaction"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:backgroundTint="@color/green_primary"
-            android:text="Save Transaction"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
 
 </FrameLayout>
+

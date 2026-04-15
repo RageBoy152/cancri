@@ -16,13 +16,9 @@ import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.Spinner
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -34,15 +30,14 @@ import com.example.cancri.data.AppDatabase
 import com.example.cancri.data.SubscriptionType
 import com.example.cancri.data.model.SubscriptionModel
 import com.example.cancri.data.model.TransactionModel
-import com.google.android.material.textfield.TextInputEditText
+import com.example.cancri.ui.AddTransactionBottomSheet
+import com.example.cancri.ui.NavbarFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.Instant
 import java.util.Calendar
-import java.util.UUID
 
 class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
 
@@ -66,8 +61,6 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
         "Bills" to R.drawable.ic_lucide_lamp_ceiling
     )
 
-    private var currentAmount = 0.0
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
@@ -77,7 +70,6 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
 
         setupHero()
         setupScreenActions()
-        setupAddTransactionDrawer()
         animatePanelEntry()
         observeTransactions()
         observeSubscriptions()
@@ -313,111 +305,8 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
     }
 
     override fun onBottomNavFabClicked() {
-        openDrawer()
-    }
-
-    //  Add Transaction drawer
-    private fun setupAddTransactionDrawer() {
-        val display = findViewById<TextView>(R.id.amountDisplay)
-        val input   = findViewById<TextInputEditText>(R.id.inputName)
-        val spinner = findViewById<Spinner>(R.id.spinnerCategory)
-
-        spinner.adapter = ArrayAdapter(
-            this,
-            android.R.layout.simple_spinner_dropdown_item,
-            listOf("----") + categoryNames + listOf("Other")
-        )
-
-        listOf(R.id.btn5 to 5.0, R.id.btn10 to 10.0, R.id.btn20 to 20.0, R.id.btn50 to 50.0)
-            .forEach { (id, value) ->
-                findViewById<Button>(id).setOnClickListener {
-                    currentAmount += value
-                    display.text = "%.2f".format(currentAmount)
-                }
-            }
-
-        findViewById<Button>(R.id.btnSaveTransaction).setOnClickListener {
-            if (currentAmount == 0.0) {
-                Toast.makeText(this, "Please add an amount", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            val name     = input.text?.toString()?.trim() ?: ""
-            val selected = spinner.selectedItem?.toString()
-            val category = if (selected == "----" || selected == "Other") null else selected
-
-            lifecycleScope.launch(Dispatchers.IO) {
-
-                // If Subscriptions selected, save to subscriptions table
-                // and link the transaction to it via subscriptionId
-                var linkedSubId: UUID? = null
-                if (category == "Subscriptions") {
-                    linkedSubId = UUID.randomUUID()
-                    database.getSubscriptionDao().upsert(
-                        SubscriptionModel(
-                            id          = linkedSubId,
-                            amount      = currentAmount,
-                            description = name.ifEmpty { "Subscription" },
-                            type        = SubscriptionType.MONTHLY
-                        )
-                    )
-                }
-
-                // Always save a transaction, linked to subscription if applicable
-                database.getTransactionDao().upsert(
-                    TransactionModel(
-                        id             = UUID.randomUUID(),
-                        createdAt      = Instant.now(),
-                        updatedAt      = null,
-                        amount         = currentAmount,
-                        description    = name.ifEmpty { category ?: "Transaction" },
-                        subscriptionId = linkedSubId,
-                        category       = category
-                    )
-                )
-
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@MainActivity, "Saved!", Toast.LENGTH_SHORT).show()
-                    currentAmount = 0.0
-                    display.text  = "0.00"
-                    input.text?.clear()
-                    spinner.setSelection(0)
-                    closeDrawer()
-                }
-            }
-        }
-
-        findViewById<View>(R.id.drawerScrim).setOnClickListener { closeDrawer() }
-    }
-
-    private fun openDrawer() {
-        val scrim  = findViewById<View>(R.id.drawerScrim)
-        val drawer = findViewById<LinearLayout>(R.id.addTransactionDrawer)
-        scrim.visibility = View.VISIBLE
-        ObjectAnimator.ofFloat(scrim, View.ALPHA, 0f, 1f).apply { duration = 250; start() }
-        drawer.post {
-            ObjectAnimator.ofFloat(drawer, View.TRANSLATION_Y, drawer.height.toFloat(), 0f).apply {
-                duration     = 350
-                interpolator = android.view.animation.DecelerateInterpolator(2f)
-                start()
-            }
-        }
-    }
-
-    private fun closeDrawer() {
-        val scrim  = findViewById<View>(R.id.drawerScrim)
-        val drawer = findViewById<LinearLayout>(R.id.addTransactionDrawer)
-        ObjectAnimator.ofFloat(scrim, View.ALPHA, 1f, 0f).apply {
-            duration = 250
-            start()
-            addListener(object : android.animation.AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: android.animation.Animator) { scrim.visibility = View.GONE }
-            })
-        }
-        ObjectAnimator.ofFloat(drawer, View.TRANSLATION_Y, 0f, drawer.height.toFloat()).apply {
-            duration     = 300
-            interpolator = android.view.animation.AccelerateInterpolator()
-            start()
-        }
+        AddTransactionBottomSheet.newInstance(ArrayList(categoryNames))
+            .show(supportFragmentManager, AddTransactionBottomSheet.TAG)
     }
 }
+

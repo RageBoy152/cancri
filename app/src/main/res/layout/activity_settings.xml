@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -21,7 +21,7 @@
 <!--            style="@style/Widget.Material3.Button.OutlinedButton"-->
 <!--            android:layout_width="wrap_content"-->
 <!--            android:layout_height="wrap_content"-->
-<!--            android:text="← Back"-->
+<!--            android:text="â† Back"-->
 <!--            android:textSize="13sp"-->
 <!--            android:textColor="@color/text_white"-->
 <!--            android:layout_marginBottom="28dp" />-->
@@ -69,7 +69,7 @@
 <!--        </LinearLayout>-->
 <!--    </LinearLayout>-->
 
-    <!-- ── OLD Header ── -->
+    <!-- â”€â”€ OLD Header â”€â”€ -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -102,7 +102,7 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:showDividers="middle"
-            android:divider="@drawable/gap_divider"
+            android:divider="@drawable/gap_divider_vertical_8"
             android:orientation="vertical">
 
             <!-- PROFILE section -->
@@ -154,7 +154,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="›"
+                        android:text=">"
                         android:textSize="18sp"
                         android:textColor="@color/text_secondary" />
 
@@ -189,7 +189,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="£ British Pound"
+                            android:text="Â£ British Pound"
                             android:textSize="15sp"
                             android:textColor="@color/text_primary" />
 
@@ -198,7 +198,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="›"
+                        android:text=">"
                         android:textSize="18sp"
                         android:textColor="@color/text_secondary" />
 
@@ -288,7 +288,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/bottomNavContainer"
-        android:name="com.example.cancri.NavbarFragment"
+        android:name="com.example.cancri.ui.NavbarFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"

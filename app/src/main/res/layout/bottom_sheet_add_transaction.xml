@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="bottom">
+
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        android:id="@+id/dragHandle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Transaction"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Amount"
+        android:textColor="@color/text_tertiary"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/amountDisplay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="8dp"
+        android:background="@drawable/input_shape"
+        android:gravity="center"
+        android:hint="£0.00"
+        android:inputType="numberDecimal"
+        android:padding="12dp"
+        android:textColor="@color/text_primary"
+        android:textColorHint="#801C241C"
+        android:textSize="24sp"
+        android:textFontWeight="500" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:showDividers="middle"
+        android:divider="@drawable/gap_divider_horizontal_12"
+        android:orientation="horizontal">
+
+
+        <Button
+            android:id="@+id/btn5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="£5"
+            android:textFontWeight="500"
+            android:textSize="14sp"
+            android:textColor="@color/green_primary"
+            app:backgroundTint="@null"
+            android:background="@drawable/button_secondary_shape"/>
+
+        <Button
+            android:id="@+id/btn10"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textFontWeight="500"
+            android:text="£10"
+            android:textSize="14sp"
+            android:textColor="@color/green_primary"
+            app:backgroundTint="@null"
+            android:background="@drawable/button_secondary_shape"/>
+
+        <Button
+            android:id="@+id/btn20"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textFontWeight="500"
+            android:text="£20"
+            android:textSize="14sp"
+            android:textColor="@color/green_primary"
+            app:backgroundTint="@null"
+            android:background="@drawable/button_secondary_shape" />
+
+        <Button
+            android:id="@+id/btn50"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textFontWeight="500"
+            android:text="£50"
+            android:textSize="14sp"
+            android:textColor="@color/green_primary"
+            app:backgroundTint="@null"
+            android:background="@drawable/button_secondary_shape"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Description (optional)"
+        android:textColor="@color/text_tertiary"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/inputName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/input_shape"
+        android:hint="e.g. Snacks from shop"
+        android:inputType="text"
+        android:textColor="@color/text_primary"
+        android:textColorHint="#801C241C"
+        android:textSize="14sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Category"
+        android:textColor="@color/text_tertiary"
+        android:textSize="16sp" />
+
+    <Spinner
+        android:id="@+id/spinnerCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/input_shape_spinner"
+        android:textColor="@color/text_primary"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/btnSaveTransaction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save Transaction"
+        android:layout_marginTop="32dp"
+        android:textSize="14sp"
+        android:textColor="@color/text_white"
+        app:backgroundTint="@null"
+        android:background="@drawable/button_main_shape"/>
+
+</LinearLayout>
+
+

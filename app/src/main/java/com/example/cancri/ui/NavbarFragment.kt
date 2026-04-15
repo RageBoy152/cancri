@@ -1,4 +1,4 @@
-package com.example.cancri
+package com.example.cancri.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +7,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import com.example.cancri.MainActivity
+import com.example.cancri.R
+import com.example.cancri.SettingsActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class NavbarFragment : Fragment(R.layout.navbar_fragment) {
@@ -35,6 +38,7 @@ class NavbarFragment : Fragment(R.layout.navbar_fragment) {
         val settings = view.findViewById<View>(R.id.navSettings)
         val fab = view.findViewById<FloatingActionButton>(R.id.fabAddTransaction)
 
+        fab.visibility = if (selectedTab == Tab.DASHBOARD) View.VISIBLE else View.GONE
         applySelectedState(view, selectedTab)
 
         dashboard.setOnClickListener {

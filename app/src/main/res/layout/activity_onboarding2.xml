@@ -78,15 +78,14 @@
         <EditText
             android:id="@+id/etName"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="@android:drawable/edit_text"
+            android:background="@drawable/input_shape"
             android:hint="John Doe"
             android:inputType="textPersonName"
-            android:paddingStart="12dp"
-            android:textColor="#000000"
-            android:textColorHint="#888888"
-            android:textSize="15sp" />
+            android:textColor="@color/text_primary"
+            android:textColorHint="#801C241C"
+            android:textSize="14sp" />
 
         <!-- Next button -->
         <Button
