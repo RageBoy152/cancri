@@ -18,6 +18,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
@@ -58,7 +59,12 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
     private val categoryRowIds    = listOf(R.id.catBills, R.id.catSubscriptions, R.id.catDebts, R.id.catSavings)
     private val categoryNames     = listOf("Bills", "Subscriptions", "Debts", "Savings Goals")
     private val categoryBarColors = listOf(R.color.bar_green, R.color.bar_green, R.color.bar_amber, R.color.bar_red)
-    private val categoryIcons     = listOf("", "", "", "")
+    private val categoryIconMap = mapOf(
+        "Savings Goals" to R.drawable.ic_lucide_piggy_bank,
+        "Debts" to R.drawable.ic_lucide_wallet_cards,
+        "Subscriptions" to R.drawable.ic_lucide_list,
+        "Bills" to R.drawable.ic_lucide_lamp_ceiling
+    )
 
     private var currentAmount = 0.0
 
@@ -143,6 +149,7 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
                 withContext(Dispatchers.Main) {
                     updateSpendingBreakdown(transactions)
                     updateGoalStatus(transactions)
+                    updateTransactionsList(transactions)
                 }
             }
         }
@@ -174,8 +181,11 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
             val catBudget = budgets[catName] ?: 1.0
             val progress  = (catSpent / catBudget).coerceIn(0.0, 1.0)
 
-            row.findViewById<TextView>(R.id.catName).text    = "${categoryIcons[i]}  ${catName.uppercase()}"
-            row.findViewById<TextView>(R.id.catAmounts).text = "%.2f / %.2f".format(catSpent, catBudget)
+            row.findViewById<ImageView>(R.id.catIcon).setImageResource(
+                categoryIconMap[catName] ?: R.drawable.ic_lucide_list
+            )
+            row.findViewById<TextView>(R.id.catName).text    = catName.uppercase()
+            row.findViewById<TextView>(R.id.catAmounts).text = "£%.2f / £%.2f".format(catSpent, catBudget)
 
             val barFill  = row.findViewById<View>(R.id.catBarFill)
             val statusTv = row.findViewById<TextView>(R.id.catStatus)
@@ -254,6 +264,40 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
             row.findViewById<TextView>(R.id.subAmount).text = "%.2f".format(sub.amount)
             row.findViewById<TextView>(R.id.subFreq).text   = if (sub.type == SubscriptionType.MONTHLY) "/mo" else "/yr"
             row.findViewById<View>(R.id.subDivider).visibility = if (index == subs.lastIndex) View.GONE else View.VISIBLE
+
+            container.addView(row)
+        }
+    }
+
+    //  Transactions list (live from DB)
+    private fun updateTransactionsList(transactions: List<TransactionModel>) {
+        val container = findViewById<LinearLayout>(R.id.transactionsContainer)
+        container.removeAllViews()
+
+        if (transactions.isEmpty()) {
+            val empty = TextView(this).apply {
+                text     = "No transactions yet"
+                textSize = 13f
+                setTextColor(getColor(R.color.text_tertiary))
+                setPadding(0, 8, 0, 8)
+            }
+            container.addView(empty)
+            return
+        }
+
+        transactions.forEachIndexed { index, transaction ->
+            val row  = LayoutInflater.from(this).inflate(R.layout.item_transaction, container, false)
+            val logo = row.findViewById<TextView>(R.id.transactionLogo)
+
+            logo.text = transaction.description.firstOrNull()?.uppercase() ?: "?"
+            logo.backgroundTintList = android.content.res.ColorStateList.valueOf(
+                getColor(R.color.green_primary) // R.color.paramount_blue
+            )
+
+            row.findViewById<TextView>(R.id.transactionTitle).text   = transaction.description
+            row.findViewById<TextView>(R.id.transactionDescription).text   = transaction.category ?: "Uncategorized"
+            row.findViewById<TextView>(R.id.transactionAmount).text = "£%.2f".format(transaction.amount)
+            row.findViewById<View>(R.id.transactionDivider).visibility = if (index == transactions.lastIndex) View.GONE else View.VISIBLE
 
             container.addView(row)
         }
