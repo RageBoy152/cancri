@@ -41,22 +41,48 @@ class NotificationReceiver : BroadcastReceiver() {
                     val daysUntil = ChronoUnit.DAYS.between(today, nextPaymentDate)
 
                     if (daysUntil == 3L) {
+                        // Randomise the message in the reminder
+                        val titles = listOf("Heads up!", "Payment Alert", "Subscription Reminder", "Budget Check")
+                        val footers = listOf("Ready?", "Keep an eye on it!", "Don't forget!", "Time to prepare!")
+                        
                         NotificationHelper.showNotification(
                             context,
-                            "Subscription Due Soon",
-                            "${sub.description} is due in 3 days"
+                            titles.random(),
+                            "${sub.description} is due in 3 days. ${footers.random()}"
                         )
                     }
                 }
             }
 
-            // 20% chance of motivation
+            // Weekly Streak Reminder
+            val prefs = context.getSharedPreferences("cancri_prefs", Context.MODE_PRIVATE)
+            val lastActiveStr = prefs.getString("last_active_date", "") ?: ""
+
+            if (lastActiveStr.isNotEmpty()) {
+                val lastActiveDate = java.time.LocalDate.parse(lastActiveStr)
+                val daysSinceActive = ChronoUnit.DAYS.between(lastActiveDate, today)
+
+                if (daysSinceActive == 6L) {
+                    NotificationHelper.showNotification(
+                        context,
+                        "Streak at risk!",
+                        "It's been 6 days! Open Cancri today to keep your weekly streak alive."
+                    )
+                }
+            }
+
+            // Personalised motivational messages (20% chance)
             if ((1..100).random() <= 20) {
-                NotificationHelper.showNotification(
-                    context,
-                    "Keep Going",
-                    "You're doing great — stay consistent"
+                val motivations = listOf(
+                    "One Day at a Time" to "Tracking today is a great start.",
+                    "Every Bit Counts" to "Small steps can make a big difference over time.",
+                    "Stay Steady" to "Consistency helps build great habits.",
+                    "Progress" to "You're making progress with every update.",
+                    "Habit Builder" to "Building good habits takes time, keep at it."
                 )
+                
+                val (randomTitle, randomMessage) = motivations.random()
+                NotificationHelper.showNotification(context, randomTitle, randomMessage)
             }
         }
     }

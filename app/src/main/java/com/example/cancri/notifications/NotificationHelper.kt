@@ -1,9 +1,12 @@
 package com.example.cancri.notifications
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.cancri.R
@@ -22,7 +25,7 @@ object NotificationHelper {
                 NotificationManager.IMPORTANCE_DEFAULT
             )
             val manager = context.getSystemService(NotificationManager::class.java)
-            manager.createNotificationChannel(channel)
+            manager?.createNotificationChannel(channel)
         }
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
@@ -32,6 +35,9 @@ object NotificationHelper {
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
 
-        NotificationManagerCompat.from(context).notify((0..1000).random(), builder.build())
+        // Check permission before notifying (required for API 33+)
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            NotificationManagerCompat.from(context).notify((0..1000).random(), builder.build())
+        }
     }
 }

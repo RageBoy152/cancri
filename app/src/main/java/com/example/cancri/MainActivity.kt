@@ -22,8 +22,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.lifecycleScope
 import com.example.cancri.data.AppDatabase
@@ -40,9 +38,11 @@ import kotlinx.coroutines.withContext
 import java.time.Instant
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.ZoneId
+import java.time.temporal.ChronoUnit
 import java.util.Calendar
 import java.util.Locale
-import java.time.ZoneId
+import java.util.UUID
 
 class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
 
@@ -72,6 +72,8 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
         supportActionBar?.hide()
         setContentView(R.layout.activity_main)
 
+        updateWeeklyStreak()
+
         database = AppDatabase.getDatabase(this, dbScope)
 
         setupHero()
@@ -80,6 +82,53 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
         observeTransactions()
         observeSubscriptions()
         checkNotificationPermission()
+    }
+
+    private fun updateWeeklyStreak() {
+        val prefs = getSharedPreferences("cancri_prefs", MODE_PRIVATE)
+        val today = LocalDate.now()
+
+        val originStr = prefs.getString("streak_origin_date", "") ?: ""
+        val lastStr   = prefs.getString("last_active_date", "") ?: ""
+
+        var origin = if (originStr.isEmpty()) today else LocalDate.parse(originStr)
+        val last   = if (lastStr.isEmpty()) today else LocalDate.parse(lastStr)
+
+        // Reset if they haven't been here in over 7 days
+        if (ChronoUnit.DAYS.between(last, today) > 7) {
+            origin = today
+        }
+
+        // Calculate how many 7-day blocks (weeks) they have completed
+        val weeksPassed = (ChronoUnit.DAYS.between(origin, today) / 7).toInt() + 1
+
+        // Save today as the new "last active"
+        prefs.edit()
+            .putString("streak_origin_date", origin.toString())
+            .putString("last_active_date", today.toString())
+            .putInt("weeks_count", weeksPassed)
+            .apply()
+
+        renderStreakUI(weeksPassed)
+    }
+
+    private fun renderStreakUI(weeks: Int) {
+        findViewById<TextView>(R.id.streakLabel).text = "$weeks Week Streak"
+
+        val claws = listOf(
+            findViewById<ImageView>(R.id.streakClaw1),
+            findViewById<ImageView>(R.id.streakClaw2),
+            findViewById<ImageView>(R.id.streakClaw3),
+            findViewById<ImageView>(R.id.streakClaw4),
+            findViewById<ImageView>(R.id.streakClaw5)
+        )
+
+        // Show 1-5 filled claws. If streak is 6, it wraps back to 1 (6 % 5)
+        val displayCount = if (weeks % 5 == 0 && weeks > 0) 5 else weeks % 5
+
+        claws.forEachIndexed { i, view ->
+            view?.setImageResource(if (i < displayCount) R.drawable.cancri_streak_filled else R.drawable.cancri_streak_outline)
+        }
     }
 
     private fun checkNotificationPermission() {
@@ -516,5 +565,3 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
         }
     }
 }
-
-
