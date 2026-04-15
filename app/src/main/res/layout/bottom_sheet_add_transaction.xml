@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:showDividers="middle"
-        android:divider="@drawable/gap_divider_horizontal_12"
+        android:divider="@drawable/gap_divider_horizontal_8"
         android:orientation="horizontal">
 
 
