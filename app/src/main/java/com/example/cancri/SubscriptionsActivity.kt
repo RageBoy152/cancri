@@ -12,7 +12,6 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -21,17 +20,21 @@ import androidx.lifecycle.lifecycleScope
 import com.example.cancri.data.AppDatabase
 import com.example.cancri.data.SubscriptionType
 import com.example.cancri.data.model.SubscriptionModel
-import com.google.android.material.textfield.TextInputEditText
+import com.example.cancri.ui.AddSubscriptionBottomSheet
+import com.example.cancri.ui.NavbarFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.Month
+import java.util.Locale
 
-class SubscriptionsActivity : AppCompatActivity() {
+class SubscriptionsActivity : AppCompatActivity(), NavbarFragment.Listener {
 
     private val dbScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private lateinit var database: AppDatabase
+    private val categoryNames = listOf("Bills", "Subscriptions", "Debts", "Savings Goals")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,11 +80,12 @@ class SubscriptionsActivity : AppCompatActivity() {
 
             row.findViewById<TextView>(R.id.editSubName).text   = sub.description
             row.findViewById<TextView>(R.id.editSubAmount).text = "£%.2f".format(sub.amount)
-            row.findViewById<TextView>(R.id.editSubType).text   =
-                if (sub.type == SubscriptionType.MONTHLY) "Monthly" else "Yearly"
+            row.findViewById<TextView>(R.id.editSubType).text   = formatRenewalText(sub)
 
             row.findViewById<View>(R.id.btnEditSub).setOnClickListener {
-                showEditDialog(sub)
+                AddSubscriptionBottomSheet
+                    .newEditInstance(ArrayList(categoryNames), sub.id)
+                    .show(supportFragmentManager, AddSubscriptionBottomSheet.TAG)
             }
 
             row.findViewById<View>(R.id.btnDeleteSub).setOnClickListener {
@@ -110,60 +114,33 @@ class SubscriptionsActivity : AppCompatActivity() {
         }
     }
 
-    private fun showEditDialog(sub: SubscriptionModel) {
-        val dialogView  = LayoutInflater.from(this).inflate(R.layout.dialog_edit_subscription, null)
-        val inputAmount = dialogView.findViewById<TextInputEditText>(R.id.dialogInputAmount)
-        val btnMonthly  = dialogView.findViewById<Button>(R.id.dialogBtnMonthly)
-        val btnYearly   = dialogView.findViewById<Button>(R.id.dialogBtnYearly)
+    override fun onBottomNavFabClicked() {
+        AddSubscriptionBottomSheet
+            .newInstance(ArrayList(categoryNames))
+            .show(supportFragmentManager, AddSubscriptionBottomSheet.TAG)
+    }
 
-        var selectedType = sub.type
-        inputAmount.setText("%.2f".format(sub.amount))
-
-        fun selectMonthly() {
-            selectedType = SubscriptionType.MONTHLY
-            btnMonthly.backgroundTintList = android.content.res.ColorStateList.valueOf(getColor(R.color.green_primary))
-            btnMonthly.setTextColor(getColor(R.color.white))
-            btnYearly.backgroundTintList  = null
-            btnYearly.setTextColor(getColor(R.color.text_secondary))
+    private fun formatRenewalText(subscription: SubscriptionModel): String {
+        val day = (subscription.billingDay ?: 1).coerceIn(1, 31)
+        return if (subscription.type == SubscriptionType.MONTHLY) {
+            "/mo (Renews on $day${toOrdinalSuffix(day)})"
+        } else {
+            val month = (subscription.billingMonth ?: 1).coerceIn(1, 12)
+            val monthLabel = Month.of(month).name.lowercase(Locale.UK)
+                .replaceFirstChar { it.uppercaseChar() }
+                .take(3)
+            "/yr (Renews on $monthLabel $day${toOrdinalSuffix(day)})"
         }
-        fun selectYearly() {
-            selectedType = SubscriptionType.YEARLY
-            btnYearly.backgroundTintList  = android.content.res.ColorStateList.valueOf(getColor(R.color.green_primary))
-            btnYearly.setTextColor(getColor(R.color.white))
-            btnMonthly.backgroundTintList = null
-            btnMonthly.setTextColor(getColor(R.color.text_secondary))
+    }
+
+    private fun toOrdinalSuffix(day: Int): String {
+        val mod100 = day % 100
+        if (mod100 in 11..13) return "th"
+        return when (day % 10) {
+            1 -> "st"
+            2 -> "nd"
+            3 -> "rd"
+            else -> "th"
         }
-
-        btnMonthly.setOnClickListener { selectMonthly() }
-        btnYearly.setOnClickListener  { selectYearly() }
-        if (sub.type == SubscriptionType.MONTHLY) selectMonthly() else selectYearly()
-
-        AlertDialog.Builder(this)
-            .setTitle("Edit ${sub.description}")
-            .setView(dialogView)
-            .setPositiveButton("Save") { _, _ ->
-                val newAmount = inputAmount.text?.toString()?.toDoubleOrNull()
-                if (newAmount == null || newAmount <= 0) {
-                    Toast.makeText(this, "Please enter a valid amount", Toast.LENGTH_SHORT).show()
-                    return@setPositiveButton
-                }
-
-                lifecycleScope.launch(Dispatchers.IO) {
-                    // Update subscription
-                    database.getSubscriptionDao().update(
-                        sub.copy(amount = newAmount, type = selectedType)
-                    )
-
-                    // Update linked transaction amounts by subscription ID
-                    // This updates the spending breakdown bar via Flow
-                    database.getTransactionDao().updateAmountBySubscriptionId(sub.id, newAmount)
-
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(this@SubscriptionsActivity, "Updated!", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
     }
 }

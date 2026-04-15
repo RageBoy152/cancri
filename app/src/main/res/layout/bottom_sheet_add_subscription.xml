@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        android:id="@+id/dragHandle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:id="@+id/subscriptionAddEditHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Subscription"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Amount"
+        android:textColor="@color/text_tertiary"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/inputAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/input_shape"
+        android:gravity="center"
+        android:hint="£0.00"
+        android:inputType="numberDecimal"
+        android:padding="12dp"
+        android:textColor="@color/text_primary"
+        android:textColorHint="#801C241C"
+        android:textFontWeight="500"
+        android:textSize="24sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Billing cycle"
+        android:textColor="@color/text_tertiary"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:divider="@drawable/gap_divider_horizontal_8"
+        android:orientation="horizontal"
+        android:showDividers="middle">
+
+        <Button
+            android:id="@+id/btnMonthly"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/button_secondary_shape"
+            android:text="Monthly"
+            android:textColor="@color/green_primary"
+            android:textFontWeight="500"
+            android:textSize="14sp"
+            app:backgroundTint="@null" />
+
+        <Button
+            android:id="@+id/btnYearly"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/button_secondary_shape"
+            android:text="Yearly"
+            android:textColor="@color/green_primary"
+            android:textFontWeight="500"
+            android:textSize="14sp"
+            app:backgroundTint="@null" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/billingDateLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Day of month"
+        android:textColor="@color/text_tertiary"
+        android:textSize="16sp" />
+
+    <Spinner
+        android:id="@+id/spinnerMonthlyDay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/input_shape_spinner"
+        android:textColor="@color/text_primary"
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/inputYearlyDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/input_shape"
+        android:clickable="true"
+        android:focusable="false"
+        android:hint="Choose month and day"
+        android:inputType="none"
+        android:padding="12dp"
+        android:textColor="@color/text_primary"
+        android:textColorHint="#801C241C"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Title"
+        android:textColor="@color/text_tertiary"
+        android:textSize="16sp" />
+
+    <EditText
+        android:id="@+id/inputTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/input_shape"
+        android:hint="e.g. Spotify Premium"
+        android:inputType="text"
+        android:textColor="@color/text_primary"
+        android:textColorHint="#801C241C"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/btnSaveTransaction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/button_main_shape"
+        android:text="Save Subscription"
+        android:textColor="@color/text_white"
+        android:textSize="14sp"
+        app:backgroundTint="@null" />
+
+</LinearLayout>
+

@@ -307,6 +307,8 @@
                     android:id="@+id/subscriptionsContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:showDividers="middle"
+                    android:divider="@drawable/gap_divider_vertical_12"
                     android:orientation="vertical" />
 
             </LinearLayout>

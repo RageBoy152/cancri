@@ -141,7 +141,9 @@ class AddTransactionBottomSheet : BottomSheetDialogFragment() {
                             id = linkedSubId,
                             amount = currentAmount,
                             description = name.ifEmpty { "Subscription" },
-                            type = SubscriptionType.MONTHLY
+                            type = SubscriptionType.MONTHLY,
+                            billingDay = null,
+                            billingMonth = null
                         )
                     )
                 }

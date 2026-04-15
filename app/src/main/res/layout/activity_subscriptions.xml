@@ -4,21 +4,18 @@
     SubscriptionsActivity layout — edit/delete subscriptions screen.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/surface_page"
     android:orientation="vertical">
 
-    <!-- ── Header ─────────────────────────────────────────────────────── -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/surface_card"
-        android:elevation="4dp"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingStart="8dp"
-        android:paddingEnd="16dp">
+        android:paddingVertical="16dp">
 
         <!-- Back arrow -->
         <ImageView
@@ -53,15 +50,27 @@
     <!-- ── Subscription rows ───────────────────────────────────────────── -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <LinearLayout
             android:id="@+id/editSubsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="12dp" />
+            android:padding="16dp"
+            android:showDividers="middle"
+            android:divider="@drawable/gap_divider_vertical_8"
+            android:orientation="vertical" />
 
     </ScrollView>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/bottomNavContainer"
+        android:name="com.example.cancri.ui.NavbarFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:elevation="12dp"
+        tools:layout="@layout/navbar_fragment" />
 
 </LinearLayout>

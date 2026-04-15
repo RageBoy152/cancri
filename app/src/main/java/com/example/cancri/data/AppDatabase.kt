@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import java.time.Instant
 import java.util.UUID
 
-@Database(entities = [SubscriptionModel::class, TransactionModel::class], version = 4)
+@Database(entities = [SubscriptionModel::class, TransactionModel::class], version = 5)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun getSubscriptionDao(): SubscriptionDao
@@ -44,6 +44,14 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        // v4 -> v5: add billing schedule columns for subscriptions
+        val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE subscriptions ADD COLUMN billing_day INTEGER")
+                db.execSQL("ALTER TABLE subscriptions ADD COLUMN billing_month INTEGER")
+            }
+        }
+
         fun getDatabase(context: Context, scope: CoroutineScope): AppDatabase {
             return instance ?: synchronized(this) {
                 val newInstance = Room.databaseBuilder(
@@ -51,7 +59,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "cancri_database"
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_4_5)
                     .fallbackToDestructiveMigration()
                     .addCallback(AppDatabaseCallback(scope))
                     .build()

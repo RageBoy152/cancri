@@ -14,9 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp">
+        android:orientation="horizontal">
 
         <!-- Service logo circle -->
         <TextView
@@ -30,7 +28,7 @@
             android:textSize="13sp"
             android:textStyle="bold" />
 
-        <!-- Name + billing period -->
+        <!-- Name + billing date -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -51,7 +49,7 @@
                 android:id="@+id/subDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Billed monthly"
+                android:text="Next billing: March 9th"
                 android:textColor="@color/text_tertiary"
                 android:textSize="11sp" />
 
@@ -83,6 +81,15 @@
                 android:textSize="11sp" />
 
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/subStatusCircle"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="12dp"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_lucide_circle"
+            android:tint="@color/text_tertiary" />
 
     </LinearLayout>
 

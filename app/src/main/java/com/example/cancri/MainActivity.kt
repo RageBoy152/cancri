@@ -1,4 +1,4 @@
-/* Cancri - money management app
+﻿/* Cancri - money management app
    Programming for Mobile - COMP08068
    Team - Matt Miller, Kyle McNamee, Jaimie Neilson, Andrew Gilmour
    Date created - 24/03/26
@@ -37,7 +37,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.Instant
+import java.time.LocalDate
+import java.time.YearMonth
 import java.util.Calendar
+import java.util.Locale
 import java.time.ZoneId
 
 class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
@@ -145,6 +149,7 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
                     updateSpendingBreakdown(transactions, latestSubscriptions)
                     updateGoalStatus(transactions)
                     updateTransactionsList(transactions)
+                    updateSubscriptionsList(latestSubscriptions)
                 }
             }
         }
@@ -326,25 +331,68 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
             return
         }
 
-        subs.forEachIndexed { index, sub ->
-            val row  = LayoutInflater.from(this).inflate(R.layout.item_subscription, container, false)
+        val today = LocalDate.now()
+        val latestTxBySubscriptionId = latestTransactions
+            .filter { it.subscriptionId != null }
+            .groupBy { it.subscriptionId!! }
+            .mapValues { (_, txs) -> txs.maxByOrNull { it.createdAt } }
+
+        val sortedSubs = subs.sortedBy { nextBillingDate(it, today) }
+
+        sortedSubs.forEachIndexed { index, sub ->
+            val row = LayoutInflater.from(this).inflate(R.layout.item_subscription, container, false)
             val logo = row.findViewById<TextView>(R.id.subLogo)
+            val statusIcon = row.findViewById<ImageView>(R.id.subStatusCircle)
+            val nextDate = nextBillingDate(sub, today)
+            val cycleStart = cycleStartDate(sub, today)
+            val latestTx = latestTxBySubscriptionId[sub.id]
+            val latestTxDate = latestTx
+                ?.createdAt
+                ?.atZone(ZoneId.systemDefault())
+                ?.toLocalDate()
+            val isComplete = latestTxDate != null && !latestTxDate.isBefore(cycleStart)
 
             logo.text = sub.description.firstOrNull()?.uppercase() ?: "?"
             logo.backgroundTintList = android.content.res.ColorStateList.valueOf(
                 getColor(if (sub.type == SubscriptionType.MONTHLY) R.color.green_primary else R.color.paramount_blue)
             )
 
-            row.findViewById<TextView>(R.id.subName).text   = sub.description
-            row.findViewById<TextView>(R.id.subDate).text   = if (sub.type == SubscriptionType.MONTHLY) "Billed monthly" else "Billed yearly"
-            row.findViewById<TextView>(R.id.subAmount).text = "%.2f".format(sub.amount)
-            row.findViewById<TextView>(R.id.subFreq).text   = if (sub.type == SubscriptionType.MONTHLY) "/mo" else "/yr"
-            row.findViewById<View>(R.id.subDivider).visibility = if (index == subs.lastIndex) View.GONE else View.VISIBLE
+            row.findViewById<TextView>(R.id.subName).text = sub.description
+            row.findViewById<TextView>(R.id.subDate).text = "Next billing: ${formatDate(nextDate)}"
+            row.findViewById<TextView>(R.id.subAmount).text = "£%.2f".format(sub.amount)
+            row.findViewById<TextView>(R.id.subFreq).text = if (sub.type == SubscriptionType.MONTHLY) "/mo" else "/yr"
+            row.findViewById<View>(R.id.subDivider).visibility = if (index == sortedSubs.lastIndex) View.GONE else View.VISIBLE
+
+            statusIcon.setImageResource(
+                if (isComplete) R.drawable.ic_lucide_circle_check_big else R.drawable.ic_lucide_circle
+            )
+            statusIcon.imageTintList = android.content.res.ColorStateList.valueOf(
+                getColor(if (isComplete) R.color.green_primary else R.color.text_tertiary)
+            )
+
+            row.setOnClickListener {
+                lifecycleScope.launch(Dispatchers.IO) {
+                    if (isComplete) {
+                        latestTx?.let { database.getTransactionDao().delete(it) }
+                    } else {
+                        database.getTransactionDao().upsert(
+                            TransactionModel(
+                                id = java.util.UUID.randomUUID(),
+                                createdAt = Instant.now(),
+                                updatedAt = null,
+                                amount = sub.amount,
+                                description = sub.description,
+                                subscriptionId = sub.id,
+                                category = "Subscriptions"
+                            )
+                        )
+                    }
+                }
+            }
 
             container.addView(row)
         }
     }
-
     //  Transactions list (live from DB)
     private fun updateTransactionsList(transactions: List<TransactionModel>) {
         val container = findViewById<LinearLayout>(R.id.transactionsContainer)
@@ -392,5 +440,81 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
         AddTransactionBottomSheet.newInstance(ArrayList(categoryNames))
             .show(supportFragmentManager, AddTransactionBottomSheet.TAG)
     }
+
+    private fun nextBillingDate(subscription: SubscriptionModel, today: LocalDate): LocalDate {
+        val day = (subscription.billingDay ?: 1).coerceIn(1, 31)
+
+        return when (subscription.type) {
+            SubscriptionType.MONTHLY -> {
+                val thisMonth = YearMonth.from(today)
+                val thisMonthDate = thisMonth.atDay(day.coerceAtMost(thisMonth.lengthOfMonth()))
+                if (thisMonthDate.isBefore(today)) {
+                    val nextMonth = thisMonth.plusMonths(1)
+                    nextMonth.atDay(day.coerceAtMost(nextMonth.lengthOfMonth()))
+                } else {
+                    thisMonthDate
+                }
+            }
+
+            SubscriptionType.YEARLY -> {
+                val month = (subscription.billingMonth ?: today.monthValue).coerceIn(1, 12)
+                val thisYearMonth = YearMonth.of(today.year, month)
+                val thisYearDate = thisYearMonth.atDay(day.coerceAtMost(thisYearMonth.lengthOfMonth()))
+                if (thisYearDate.isBefore(today)) {
+                    val nextYearMonth = thisYearMonth.plusYears(1)
+                    nextYearMonth.atDay(day.coerceAtMost(nextYearMonth.lengthOfMonth()))
+                } else {
+                    thisYearDate
+                }
+            }
+        }
+    }
+
+    private fun cycleStartDate(subscription: SubscriptionModel, today: LocalDate): LocalDate {
+        val day = (subscription.billingDay ?: 1).coerceIn(1, 31)
+
+        return when (subscription.type) {
+            SubscriptionType.MONTHLY -> {
+                val thisMonth = YearMonth.from(today)
+                val thisMonthDate = thisMonth.atDay(day.coerceAtMost(thisMonth.lengthOfMonth()))
+                if (thisMonthDate.isAfter(today)) {
+                    val previousMonth = thisMonth.minusMonths(1)
+                    previousMonth.atDay(day.coerceAtMost(previousMonth.lengthOfMonth()))
+                } else {
+                    thisMonthDate
+                }
+            }
+
+            SubscriptionType.YEARLY -> {
+                val month = (subscription.billingMonth ?: today.monthValue).coerceIn(1, 12)
+                val thisYearMonth = YearMonth.of(today.year, month)
+                val thisYearDate = thisYearMonth.atDay(day.coerceAtMost(thisYearMonth.lengthOfMonth()))
+                if (thisYearDate.isAfter(today)) {
+                    val lastYearMonth = thisYearMonth.minusYears(1)
+                    lastYearMonth.atDay(day.coerceAtMost(lastYearMonth.lengthOfMonth()))
+                } else {
+                    thisYearDate
+                }
+            }
+        }
+    }
+
+    private fun formatDate(date: LocalDate): String {
+        val monthName = date.month.name.lowercase(Locale.UK)
+            .replaceFirstChar { it.uppercaseChar() }
+        return "$monthName ${date.dayOfMonth}${toOrdinalSuffix(date.dayOfMonth)}"
+    }
+
+    private fun toOrdinalSuffix(day: Int): String {
+        val mod100 = day % 100
+        if (mod100 in 11..13) return "th"
+        return when (day % 10) {
+            1 -> "st"
+            2 -> "nd"
+            3 -> "rd"
+            else -> "th"
+        }
+    }
 }
+
 

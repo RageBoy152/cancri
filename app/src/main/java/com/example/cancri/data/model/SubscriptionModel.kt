@@ -17,5 +17,9 @@ data class SubscriptionModel(
     @ColumnInfo(name = "description")
     val description: String,
     @ColumnInfo(name = "type")
-    val type: SubscriptionType
+    val type: SubscriptionType,
+    @ColumnInfo(name = "billing_day")
+    val billingDay: Int?,
+    @ColumnInfo(name = "billing_month")
+    val billingMonth: Int?
 )
