@@ -38,7 +38,10 @@ class NavbarFragment : Fragment(R.layout.navbar_fragment) {
         val settings = view.findViewById<View>(R.id.navSettings)
         val fab = view.findViewById<FloatingActionButton>(R.id.fabAddTransaction)
 
-        fab.visibility = if (selectedTab == Tab.DASHBOARD) View.VISIBLE else View.GONE
+        // Keep nav item positions stable even when the middle action is disabled.
+        fab.visibility = if (selectedTab == Tab.DASHBOARD) View.VISIBLE else View.INVISIBLE
+        fab.isClickable = selectedTab == Tab.DASHBOARD
+        fab.isFocusable = selectedTab == Tab.DASHBOARD
         applySelectedState(view, selectedTab)
 
         dashboard.setOnClickListener {
@@ -65,6 +68,7 @@ class NavbarFragment : Fragment(R.layout.navbar_fragment) {
 
     private fun navigateTo(target: Class<*>) {
         startActivity(Intent(requireContext(), target))
+        activity?.overridePendingTransition(0, 0)
         activity?.finish()
     }
 

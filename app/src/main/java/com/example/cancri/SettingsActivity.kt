@@ -6,13 +6,16 @@
 
 package com.example.cancri
 
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.NestedScrollView
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -27,6 +30,7 @@ class SettingsActivity : AppCompatActivity() {
 
         setupBackButton()
         setupSaveAndReturnButton()
+        animatePanelEntry()
     }
 
     override fun onResume() {
@@ -76,10 +80,20 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun setupSaveAndReturnButton() {
         findViewById<Button>(R.id.btnSaveAndReturn).setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-            startActivity(intent)
+            startActivity(Intent(this, MainActivity::class.java))
+            overridePendingTransition(0, 0)
             finish()
+        }
+    }
+
+    private fun animatePanelEntry() {
+        val panel = findViewById<NestedScrollView>(R.id.settingsPanel)
+        panel.post {
+            ObjectAnimator.ofFloat(panel, View.TRANSLATION_Y, panel.height.toFloat(), 0f).apply {
+                duration = 650
+                interpolator = android.view.animation.DecelerateInterpolator(2f)
+                start()
+            }
         }
     }
 }
