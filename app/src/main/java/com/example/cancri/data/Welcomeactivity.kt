@@ -22,6 +22,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.cancri.data.UserPreferences
 import java.util.Calendar
 
 class WelcomeActivity : AppCompatActivity() {
@@ -38,7 +39,7 @@ class WelcomeActivity : AppCompatActivity() {
         val arrowView    = findViewById<ImageView>(R.id.welcomeArrow)
 
         // ── Populate name from SharedPreferences ─────────────────────────
-        nameView.text = UserPreferences.getDisplayName(this)
+        nameView.text = UserPreferences(this).getDisplayName()
 
         // ── Time-aware greeting ───────────────────────────────────────────
         timeGreeting.text = getTimeGreeting()

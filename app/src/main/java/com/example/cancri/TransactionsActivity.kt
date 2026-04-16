@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.cancri.data.AppDatabase
+import com.example.cancri.data.UserPreferences
 import com.example.cancri.data.model.TransactionModel
 import com.example.cancri.ui.AddTransactionBottomSheet
 import com.example.cancri.ui.NavbarFragment
@@ -24,6 +25,7 @@ class TransactionsActivity : AppCompatActivity(), NavbarFragment.Listener {
 
     private val dbScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private lateinit var database: AppDatabase
+    private lateinit var userPreferences: UserPreferences
     private val categoryNames = listOf("Bills", "Subscriptions", "Debts", "Savings Goals")
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +34,7 @@ class TransactionsActivity : AppCompatActivity(), NavbarFragment.Listener {
         setContentView(R.layout.activity_transactions)
 
         database = AppDatabase.getDatabase(this, dbScope)
+        userPreferences = UserPreferences(this)
 
         findViewById<View>(R.id.btnBack).setOnClickListener { finish() }
 
@@ -70,7 +73,7 @@ class TransactionsActivity : AppCompatActivity(), NavbarFragment.Listener {
 
             row.findViewById<TextView>(R.id.editTransactionName).text = transaction.description
             row.findViewById<TextView>(R.id.editTransactionAmount).text =
-                UserPreferences.formatCurrency(this, transaction.amount)
+                userPreferences.formatCurrency(transaction.amount)
             row.findViewById<TextView>(R.id.editTransactionCategory).text =
                 transaction.category ?: "Uncategorized"
             row.findViewById<TextView>(R.id.btnEditTransaction).text =

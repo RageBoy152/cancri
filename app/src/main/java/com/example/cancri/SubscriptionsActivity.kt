@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.cancri.data.AppDatabase
 import com.example.cancri.data.SubscriptionType
+import com.example.cancri.data.UserPreferences
 import com.example.cancri.data.model.SubscriptionModel
 import com.example.cancri.ui.AddSubscriptionBottomSheet
 import com.example.cancri.ui.NavbarFragment
@@ -35,6 +36,7 @@ class SubscriptionsActivity : AppCompatActivity(), NavbarFragment.Listener {
 
     private val dbScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private lateinit var database: AppDatabase
+    private lateinit var userPreferences: UserPreferences
     private val categoryNames = listOf("Bills", "Subscriptions", "Debts", "Savings Goals")
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +45,7 @@ class SubscriptionsActivity : AppCompatActivity(), NavbarFragment.Listener {
         setContentView(R.layout.activity_subscriptions)
 
         database = AppDatabase.getDatabase(this, dbScope)
+        userPreferences = UserPreferences(this)
 
         findViewById<View>(R.id.btnBack).setOnClickListener { finish() }
 
@@ -91,7 +94,7 @@ class SubscriptionsActivity : AppCompatActivity(), NavbarFragment.Listener {
             }
 
             row.findViewById<TextView>(R.id.editSubName).text = sub.description
-            row.findViewById<TextView>(R.id.editSubAmount).text = UserPreferences.formatCurrency(this, sub.amount)
+            row.findViewById<TextView>(R.id.editSubAmount).text = userPreferences.formatCurrency(sub.amount)
             row.findViewById<TextView>(R.id.editSubType).text = formatRenewalText(sub)
 
             row.findViewById<View>(R.id.btnEditSub).setOnClickListener {

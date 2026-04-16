@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.Toast
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.cancri.data.UserPreferences
 import java.util.Locale
 
 class GoalsActivity : AppCompatActivity() {
@@ -17,12 +18,14 @@ class GoalsActivity : AppCompatActivity() {
     private lateinit var savingsAmountInput: EditText
     private var isUpdatingAmountText = false
     private lateinit var currencySymbol: String
+    private lateinit var userPreferences: UserPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
         setContentView(R.layout.activity_goals)
-        currencySymbol = UserPreferences.getCurrencySymbol(this)
+        userPreferences = UserPreferences(this)
+        currencySymbol = userPreferences.getCurrencySymbol()
 
         findViewById<View>(R.id.btnBack).setOnClickListener { finish() }
 

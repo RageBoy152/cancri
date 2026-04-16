@@ -15,12 +15,14 @@ import android.widget.EditText
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
+import com.example.cancri.data.UserPreferences
 
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var prefs: SharedPreferences
     private lateinit var nameInput: EditText
     private lateinit var currencySpinner: Spinner
+    private lateinit var userPreferences: UserPreferences
     private var isBindingCurrency = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +30,7 @@ class SettingsActivity : AppCompatActivity() {
         supportActionBar?.hide()
         setContentView(R.layout.activity_settings)
 
+        userPreferences = UserPreferences(this)
         prefs = getSharedPreferences("cancri_prefs", MODE_PRIVATE)
         nameInput = findViewById(R.id.inputUserName)
         currencySpinner = findViewById(R.id.spinnerCurrency)
@@ -43,12 +46,12 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun bindValues() {
-        val displayName = UserPreferences.getDisplayName(this)
+        val displayName = userPreferences.getDisplayName()
         nameInput.setText(if (displayName == "there") "" else displayName)
         nameInput.setSelection(nameInput.text?.length ?: 0)
 
         isBindingCurrency = true
-        val selectedSymbol = UserPreferences.getCurrencySymbol(this)
+        val selectedSymbol = userPreferences.getCurrencySymbol()
         val options = currencyOptions()
         val index = options.indexOfFirst { it.first == selectedSymbol }.coerceAtLeast(0)
         currencySpinner.setSelection(index)

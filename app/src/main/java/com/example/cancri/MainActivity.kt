@@ -26,6 +26,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.lifecycleScope
 import com.example.cancri.data.AppDatabase
 import com.example.cancri.data.SubscriptionType
+import com.example.cancri.data.UserPreferences
 import com.example.cancri.data.model.SubscriptionModel
 import com.example.cancri.data.model.TransactionModel
 import com.example.cancri.ui.AddTransactionBottomSheet
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
     private lateinit var database: AppDatabase
     private var latestTransactions: List<TransactionModel> = emptyList()
     private var latestSubscriptions: List<SubscriptionModel> = emptyList()
+    private lateinit var userPreferences: UserPreferences
 
     private var budgets: Map<String, Double> = emptyMap()
     private val goalBudgetCategories = listOf("Bills", "Debts", "Savings Goals")
@@ -72,6 +74,7 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
         updateWeeklyStreak()
 
         database = AppDatabase.getDatabase(this, dbScope)
+        userPreferences = UserPreferences(this)
 
         setupHero()
         setupScreenActions()
@@ -144,7 +147,7 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
     override fun onResume() {
         super.onResume()
         budgets = loadBudgetsFromPrefs()
-        findViewById<TextView>(R.id.heroName).text = UserPreferences.getDisplayName(this)
+        findViewById<TextView>(R.id.heroName).text = userPreferences.getDisplayName()
         updateSpendingBreakdown(latestTransactions, latestSubscriptions)
         updateGoalStatus(latestTransactions)
     }
@@ -152,7 +155,7 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
     //  Hero
     private fun setupHero() {
         findViewById<TextView>(R.id.heroGreeting).text = getTimeGreeting()
-        findViewById<TextView>(R.id.heroName).text = UserPreferences.getDisplayName(this)
+        findViewById<TextView>(R.id.heroName).text = userPreferences.getDisplayName()
     }
 
     private fun getTimeGreeting() = when (Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) {
@@ -259,7 +262,7 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
             )
             row.findViewById<TextView>(R.id.catName).text = catName.uppercase()
             row.findViewById<TextView>(R.id.catAmounts).text =
-                "${UserPreferences.formatCurrency(this, catSpent)} / ${UserPreferences.formatCurrency(this, catBudget)}"
+                "${userPreferences.formatCurrency(catSpent)} / ${userPreferences.formatCurrency(catBudget)}"
 
             val barFill  = row.findViewById<View>(R.id.catBarFill)
             val statusTv = row.findViewById<TextView>(R.id.catStatus)
@@ -342,10 +345,10 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
         goalStatusTv.setTextColor(getColor(if (allOnTarget) R.color.green_accent else R.color.bar_amber))
 
         if (saved >= 0) {
-            savedNoteTv.text = "SAVED ${UserPreferences.formatCurrency(this, saved)} MORE THIS MONTH"
+            savedNoteTv.text = "SAVED ${userPreferences.formatCurrency(saved)} MORE THIS MONTH"
             savedNoteTv.setTextColor(getColor(R.color.text_tertiary))
         } else {
-            savedNoteTv.text = "OVER BUDGET BY ${UserPreferences.formatCurrency(this, -saved)}"
+            savedNoteTv.text = "OVER BUDGET BY ${userPreferences.formatCurrency(-saved)}"
             savedNoteTv.setTextColor(getColor(R.color.bar_red))
         }
     }
@@ -394,7 +397,7 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
 
             row.findViewById<TextView>(R.id.subName).text = sub.description
             row.findViewById<TextView>(R.id.subDate).text = "Next billing: ${formatDate(nextDate)}"
-            row.findViewById<TextView>(R.id.subAmount).text = UserPreferences.formatCurrency(this, sub.amount)
+            row.findViewById<TextView>(R.id.subAmount).text = userPreferences.formatCurrency(sub.amount)
             row.findViewById<TextView>(R.id.subFreq).text = if (sub.type == SubscriptionType.MONTHLY) "/mo" else "/yr"
             row.findViewById<View>(R.id.subDivider).visibility = if (index == sortedSubs.lastIndex) View.GONE else View.VISIBLE
 
@@ -455,7 +458,7 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
 
             row.findViewById<TextView>(R.id.transactionTitle).text   = transaction.description
             row.findViewById<TextView>(R.id.transactionDescription).text   = transaction.category ?: "Uncategorized"
-            row.findViewById<TextView>(R.id.transactionAmount).text = UserPreferences.formatCurrency(this, transaction.amount)
+            row.findViewById<TextView>(R.id.transactionAmount).text = userPreferences.formatCurrency(transaction.amount)
             row.findViewById<View>(R.id.transactionDivider).visibility = if (index == transactions.lastIndex) View.GONE else View.VISIBLE
 
             container.addView(row)

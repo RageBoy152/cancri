@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.cancri.data.UserPreferences
 import com.example.cancri.notifications.NotificationScheduler
 import java.util.Locale
 
@@ -23,12 +24,14 @@ class Onboarding3Activity : AppCompatActivity() {
     private lateinit var savingsAmountInput: EditText
     private var isUpdatingAmountText = false
     private lateinit var currencySymbol: String
+    private lateinit var userPreferences: UserPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
         setContentView(R.layout.activity_onboarding3)
-        currencySymbol = UserPreferences.getCurrencySymbol(this)
+        userPreferences = UserPreferences(this)
+        currencySymbol = userPreferences.getCurrencySymbol()
 
         val card = findViewById<LinearLayout>(R.id.onboarding3Card)
         val slideUp = TranslateAnimation(0f, 0f, 800f, 0f).apply {

@@ -15,9 +15,9 @@ import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import com.example.cancri.R
-import com.example.cancri.UserPreferences
 import com.example.cancri.data.AppDatabase
 import com.example.cancri.data.SubscriptionType
+import com.example.cancri.data.UserPreferences
 import com.example.cancri.data.model.SubscriptionModel
 import com.example.cancri.data.model.TransactionModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -43,7 +43,7 @@ class AddTransactionBottomSheet : BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         database = AppDatabase.getDatabase(requireContext(), dbScope)
-        currencySymbol = UserPreferences.getCurrencySymbol(requireContext())
+        currencySymbol = UserPreferences(requireContext()).getCurrencySymbol()
     }
 
     override fun onCreateView(
