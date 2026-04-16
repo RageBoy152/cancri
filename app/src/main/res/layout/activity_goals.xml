@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     Cancri - money management app
-    SubscriptionsActivity layout — edit/delete subscriptions screen.
+    GoalsActivity layout — edit goals screen.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Subscriptions"
+            android:text="My Goals"
             android:textColor="@color/text_primary"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -48,20 +48,40 @@
 
     </LinearLayout>
 
-    <!-- ── Subscription rows ───────────────────────────────────────────── -->
+    <!-- ── Goal rows ───────────────────────────────────────────── -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
         <LinearLayout
-            android:id="@+id/editSubsContainer"
+            android:id="@+id/editGoalsContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:showDividers="middle"
             android:divider="@drawable/gap_divider_vertical_8"
-            android:orientation="vertical" />
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/billsGoal"
+                layout="@layout/item_edit_spending_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/debtsGoal"
+                layout="@layout/item_edit_spending_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include
+                android:id="@+id/savingsGoals"
+                layout="@layout/item_edit_spending_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
 
     </ScrollView>
 

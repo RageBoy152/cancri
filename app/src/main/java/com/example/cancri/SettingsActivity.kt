@@ -28,20 +28,15 @@ class SettingsActivity : AppCompatActivity() {
 
         prefs = getSharedPreferences("cancri_prefs", MODE_PRIVATE)
 
-        setupBackButton()
-        setupSaveAndReturnButton()
         animatePanelEntry()
     }
 
     override fun onResume() {
         super.onResume()
         updateHero()
-        setupProfileRow()
     }
 
     private fun updateHero() {
-//        val heroName = findViewById<TextView>(R.id.settingsHeroName)
-//        val avatar   = findViewById<TextView>(R.id.settingsAvatar)
         val nameRow  = findViewById<TextView>(R.id.inputUserName)
 
         val firstName = prefs.getString("user_first_name", "") ?: ""
@@ -57,34 +52,9 @@ class SettingsActivity : AppCompatActivity() {
             prefs.getString("user_name", "there") ?: "there"
         }
 
-//        heroName.text = displayName
-//        avatar.text   = initials.ifEmpty { "?" }
         nameRow.text  = if (firstName.isEmpty()) "Tap to edit" else "$firstName $lastName".trim()
-
-//        avatar.backgroundTintList = android.content.res.ColorStateList.valueOf(
-//            android.graphics.Color.parseColor(color)
-//        )
     }
 
-    private fun setupProfileRow() {
-        findViewById<LinearLayout>(R.id.settingsNameRow).setOnClickListener {
-//            startActivity(Intent(this, EditProfileActivity::class.java)) TODO: error here??
-        }
-    }
-
-    private fun setupBackButton() {
-//        findViewById<Button>(R.id.btnBack).setOnClickListener {
-//            finish()
-//        }
-    }
-
-    private fun setupSaveAndReturnButton() {
-        findViewById<Button>(R.id.btnSaveAndReturn).setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
-            overridePendingTransition(0, 0)
-            finish()
-        }
-    }
 
     private fun animatePanelEntry() {
         val panel = findViewById<NestedScrollView>(R.id.settingsPanel)

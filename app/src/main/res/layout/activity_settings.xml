@@ -58,6 +58,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:showDividers="middle"
+                android:divider="@drawable/gap_divider_vertical_12"
                 android:background="@drawable/card_shape">
 
                 <LinearLayout
@@ -76,7 +78,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Edit Profile"
+                            android:text="Your Name"
                             android:textColor="@color/text_tertiary"
                             android:textSize="11sp"
                             android:textStyle="bold" />
@@ -100,15 +102,9 @@
 
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/divider" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
 
@@ -143,17 +139,8 @@
                         android:textColor="@color/text_secondary" />
 
                 </LinearLayout>
-            </LinearLayout>
 
-            <!-- Save button directly below profile card -->
-            <Button
-                android:id="@+id/btnSaveAndReturn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Save Changes"
-                android:textSize="16sp"
-                app:backgroundTint="@null"
-                android:background="@drawable/button_main_shape"/>
+            </LinearLayout>
 
             <!-- ABOUT section -->
             <TextView
@@ -168,6 +155,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:showDividers="middle"
+                android:divider="@drawable/gap_divider_vertical_12"
                 android:background="@drawable/card_shape">
 
                 <LinearLayout
@@ -193,16 +182,10 @@
 
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/divider" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="12dp">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0dp"

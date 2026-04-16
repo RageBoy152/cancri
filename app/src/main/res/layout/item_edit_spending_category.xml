@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Reusable editable spending category row.
+    Used three times inside the My Goals activity.
+    Populated programmatically in GoalsActivity.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/spendingCatHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bills"
+        android:textColor="@color/text_primary"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/editAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/input_shape"
+        android:gravity="center"
+        android:hint="£0.00"
+        android:inputType="numberDecimal"
+        android:padding="12dp"
+        android:textColor="@color/text_primary"
+        android:textColorHint="#801C241C"
+        android:textSize="16sp"
+        android:textFontWeight="500" />
+
+</LinearLayout>

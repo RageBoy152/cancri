@@ -480,6 +480,9 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
     private fun setupScreenActions() {
         // Bottom nav click handling lives in NavbarFragment.
         // Keep MainActivity wiring limited to views in activity_main.
+        findViewById<TextView>(R.id.btnEditGoals).setOnClickListener {
+            startActivity(android.content.Intent(this, GoalsActivity::class.java))
+        }
         findViewById<TextView>(R.id.btnEditSubs).setOnClickListener {
             startActivity(android.content.Intent(this, SubscriptionsActivity::class.java))
         }
