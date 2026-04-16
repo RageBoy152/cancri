@@ -144,30 +144,71 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:showDividers="middle"
-                android:divider="@drawable/gap_divider_vertical_12"
                 android:background="@drawable/card_shape">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Item"
+                        android:text="Subscription reminders (3 days before)"
                         android:textSize="15sp"
                         android:textColor="@color/text_primary" />
 
-                    <TextView
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/switchSubscriptionReminders"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1.1"
-                        android:textColor="@color/text_tertiary"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
+                        android:contentDescription="Toggle subscription reminders" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Weekly streak reminders"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_primary" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/switchStreakReminders"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="Toggle weekly streak reminders" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Motivational reminders"
+                        android:textSize="15sp"
+                        android:textColor="@color/text_primary" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/switchMotivationReminders"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="Toggle motivational reminders" />
 
                 </LinearLayout>
             </LinearLayout>

@@ -16,7 +16,7 @@
         android:theme="@style/Theme.Cancri"
         tools:targetApi="31">
 
-        <!-- ✅ SplashActivity is the app entry point -->
+        <!-- SplashActivity is the entry point -->
         <activity
             android:name=".SplashActivity"
             android:exported="true"
@@ -72,12 +72,6 @@
 
         <activity
             android:name=".SettingsActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Cancri" />
-
-        <activity
-            android:name=".EditProfileActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Cancri" />

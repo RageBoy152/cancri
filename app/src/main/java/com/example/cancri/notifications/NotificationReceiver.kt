@@ -40,7 +40,7 @@ class NotificationReceiver : BroadcastReceiver() {
 
                     val daysUntil = ChronoUnit.DAYS.between(today, nextPaymentDate)
 
-                    if (daysUntil == 3L) {
+                    if (daysUntil == 3L && NotificationSettings.isSubscriptionRemindersEnabled(context)) {
                         // Randomise the message in the reminder
                         val titles = listOf("Heads up!", "Payment Alert", "Subscription Reminder", "Budget Check")
                         val footers = listOf("Ready?", "Keep an eye on it!", "Don't forget!", "Time to prepare!")
@@ -62,7 +62,7 @@ class NotificationReceiver : BroadcastReceiver() {
                 val lastActiveDate = java.time.LocalDate.parse(lastActiveStr)
                 val daysSinceActive = ChronoUnit.DAYS.between(lastActiveDate, today)
 
-                if (daysSinceActive == 6L) {
+                if (daysSinceActive == 6L && NotificationSettings.isStreakRemindersEnabled(context)) {
                     NotificationHelper.showNotification(
                         context,
                         "Streak at risk!",
@@ -72,7 +72,7 @@ class NotificationReceiver : BroadcastReceiver() {
             }
 
             // Personalised motivational messages (20% chance)
-            if ((1..100).random() <= 20) {
+            if (NotificationSettings.isMotivationRemindersEnabled(context) && (1..100).random() <= 20) {
                 val motivations = listOf(
                     "One Day at a Time" to "Tracking today is a great start.",
                     "Every Bit Counts" to "Small steps can make a big difference over time.",

@@ -29,6 +29,7 @@ import com.example.cancri.data.SubscriptionType
 import com.example.cancri.data.UserPreferences
 import com.example.cancri.data.model.SubscriptionModel
 import com.example.cancri.data.model.TransactionModel
+import com.example.cancri.notifications.NotificationSettings
 import com.example.cancri.ui.AddTransactionBottomSheet
 import com.example.cancri.ui.NavbarFragment
 import kotlinx.coroutines.CoroutineScope
@@ -55,6 +56,7 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
 
     private var budgets: Map<String, Double> = emptyMap()
     private val goalBudgetCategories = listOf("Bills", "Debts", "Savings Goals")
+    private val notificationPermissionRequestCode = 101
 
     private val categoryRowIds    = listOf(R.id.catBills, R.id.catSubscriptions, R.id.catDebts, R.id.catSavings)
     private val categoryNames     = listOf("Bills", "Subscriptions", "Debts", "Savings Goals")
@@ -139,8 +141,22 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
                 ActivityCompat.requestPermissions(
                     this,
                     arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                    101
+                    notificationPermissionRequestCode
                 )
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == notificationPermissionRequestCode) {
+            val granted = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
+            if (!granted) {
+                NotificationSettings.disableAll(this)
             }
         }
     }
