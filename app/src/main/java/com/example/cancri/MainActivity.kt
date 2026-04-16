@@ -51,12 +51,8 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
     private var latestTransactions: List<TransactionModel> = emptyList()
     private var latestSubscriptions: List<SubscriptionModel> = emptyList()
 
-    private val budgets = mapOf(
-        "Bills"         to 900.0,
-        "Subscriptions" to 54.99,
-        "Debts"         to 200.0,
-        "Savings Goals" to 300.0
-    )
+    private var budgets: Map<String, Double> = emptyMap()
+    private val goalBudgetCategories = listOf("Bills", "Debts", "Savings Goals")
 
     private val categoryRowIds    = listOf(R.id.catBills, R.id.catSubscriptions, R.id.catDebts, R.id.catSavings)
     private val categoryNames     = listOf("Bills", "Subscriptions", "Debts", "Savings Goals")
@@ -72,6 +68,7 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
         supportActionBar?.hide()
         setContentView(R.layout.activity_main)
 
+        budgets = loadBudgetsFromPrefs()
         updateWeeklyStreak()
 
         database = AppDatabase.getDatabase(this, dbScope)
@@ -146,29 +143,16 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
     }
     override fun onResume() {
         super.onResume()
-        val prefs     = getSharedPreferences("cancri_prefs", MODE_PRIVATE)
-        val firstName = prefs.getString("user_first_name", "") ?: ""
-        val lastName  = prefs.getString("user_last_name", "") ?: ""
-        val userName  = when {
-            firstName.isNotEmpty() && lastName.isNotEmpty() -> "$firstName $lastName"
-            firstName.isNotEmpty() -> firstName
-            else -> prefs.getString("user_name", "there") ?: "there"
-        }
-        findViewById<TextView>(R.id.heroName).text = userName
+        budgets = loadBudgetsFromPrefs()
+        findViewById<TextView>(R.id.heroName).text = UserPreferences.getDisplayName(this)
+        updateSpendingBreakdown(latestTransactions, latestSubscriptions)
+        updateGoalStatus(latestTransactions)
     }
 
     //  Hero
     private fun setupHero() {
-        val prefs     = getSharedPreferences("cancri_prefs", MODE_PRIVATE)
-        val firstName = prefs.getString("user_first_name", "") ?: ""
-        val lastName  = prefs.getString("user_last_name", "") ?: ""
-        val userName  = when {
-            firstName.isNotEmpty() && lastName.isNotEmpty() -> "$firstName $lastName"
-            firstName.isNotEmpty() -> firstName
-            else -> prefs.getString("user_name", "there") ?: "there"
-        }
         findViewById<TextView>(R.id.heroGreeting).text = getTimeGreeting()
-        findViewById<TextView>(R.id.heroName).text     = userName
+        findViewById<TextView>(R.id.heroName).text = UserPreferences.getDisplayName(this)
     }
 
     private fun getTimeGreeting() = when (Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) {
@@ -234,55 +218,53 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
             .filter { it.subscriptionId != null }
             .groupBy { it.subscriptionId!! }
 
-        val dueSubscriptionsThisMonth = subscriptions.count { sub ->
-            val subTxs = txBySubscriptionId[sub.id].orEmpty()
-            val latest = subTxs.maxByOrNull { it.createdAt } ?: return@count false
-            val lastPaidDate = latest.createdAt.atZone(ZoneId.systemDefault()).toLocalDate()
-
+        val latestTxBySubscriptionId = txBySubscriptionId.mapValues { (_, txs) -> txs.maxByOrNull { it.createdAt } }
+        val dueSubscriptionsThisMonth = subscriptions.filter { sub ->
             when (sub.type) {
                 SubscriptionType.MONTHLY -> true
-                SubscriptionType.YEARLY -> lastPaidDate.monthValue == today.monthValue
+                SubscriptionType.YEARLY -> (sub.billingMonth ?: today.monthValue) == today.monthValue
             }
         }
-
-        val subscriptionsLeftThisMonth = subscriptions.count { sub ->
-            val subTxs = txBySubscriptionId[sub.id].orEmpty()
-            val latest = subTxs.maxByOrNull { it.createdAt } ?: return@count true
+        val dueSubscriptionsAmountThisMonth = dueSubscriptionsThisMonth.sumOf { it.amount }
+        val paidSubscriptionsThisMonth = dueSubscriptionsThisMonth.count { sub ->
+            val latest = latestTxBySubscriptionId[sub.id] ?: return@count false
             val lastPaidDate = latest.createdAt.atZone(ZoneId.systemDefault()).toLocalDate()
-            val paidThisMonth = lastPaidDate.year == today.year && lastPaidDate.monthValue == today.monthValue
-
-            when (sub.type) {
-                SubscriptionType.MONTHLY -> !paidThisMonth
-                SubscriptionType.YEARLY -> {
-                    val dueThisMonth = lastPaidDate.monthValue == today.monthValue
-                    dueThisMonth && !paidThisMonth
-                }
-            }
+            !lastPaidDate.isBefore(cycleStartDate(sub, today))
+        }
+        val subscriptionsLeftThisMonth = (dueSubscriptionsThisMonth.size - paidSubscriptionsThisMonth).coerceAtLeast(0)
+        val subscriptionsPaidRatio = if (dueSubscriptionsThisMonth.isEmpty()) {
+            1.0
+        } else {
+            (paidSubscriptionsThisMonth.toDouble() / dueSubscriptionsThisMonth.size.toDouble()).coerceIn(0.0, 1.0)
         }
 
         categoryNames.forEachIndexed { i, catName ->
             val row       = findViewById<View>(categoryRowIds[i])
             val catSpent  = spent[catName] ?: 0.0
-            val catBudget = budgets[catName] ?: 1.0
-            val progress  = (catSpent / catBudget).coerceIn(0.0, 1.0)
+            val catBudget = if (catName == "Subscriptions") {
+                dueSubscriptionsAmountThisMonth
+            } else {
+                budgets[catName] ?: 0.0
+            }
+            val progress = if (catName == "Subscriptions") {
+                subscriptionsPaidRatio
+            } else if (catBudget <= 0.0) {
+                0.0
+            } else {
+                (catSpent / catBudget).coerceIn(0.0, 1.0)
+            }
 
             row.findViewById<ImageView>(R.id.catIcon).setImageResource(
                 categoryIconMap[catName] ?: R.drawable.ic_lucide_list
             )
-            row.findViewById<TextView>(R.id.catName).text    = catName.uppercase()
-            row.findViewById<TextView>(R.id.catAmounts).text = "£%.2f / £%.2f".format(catSpent, catBudget)
+            row.findViewById<TextView>(R.id.catName).text = catName.uppercase()
+            row.findViewById<TextView>(R.id.catAmounts).text =
+                "${UserPreferences.formatCurrency(this, catSpent)} / ${UserPreferences.formatCurrency(this, catBudget)}"
 
             val barFill  = row.findViewById<View>(R.id.catBarFill)
             val statusTv = row.findViewById<TextView>(R.id.catStatus)
 
             val paidRatio = if (catBudget <= 0.0) 0.0 else (catSpent / catBudget)
-            val subscriptionsPaidRatio = if (dueSubscriptionsThisMonth <= 0) {
-                1.0
-            } else {
-                ((dueSubscriptionsThisMonth - subscriptionsLeftThisMonth).toDouble() / dueSubscriptionsThisMonth.toDouble())
-                    .coerceIn(0.0, 1.0)
-            }
-
             val atGoal = kotlin.math.abs(paidRatio - 1) < 0.0001
 
             val (statusText, statusColor) = when (catName) {
@@ -345,10 +327,14 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
 
     //  Goal status
     private fun updateGoalStatus(transactions: List<TransactionModel>) {
-        val saved        = budgets.values.sum() - transactions.sumOf { it.amount }
+        val budgetTotal = goalBudgetCategories.sumOf { budgets[it] ?: 0.0 }
+        val spentTotal = transactions
+            .filter { tx -> goalBudgetCategories.contains(tx.category) }
+            .sumOf { it.amount }
+        val saved        = budgetTotal - spentTotal
         val goalStatusTv = findViewById<TextView>(R.id.heroGoalStatus)
         val savedNoteTv  = findViewById<TextView>(R.id.heroSavedNote)
-        val allOnTarget  = categoryNames.all { cat ->
+        val allOnTarget  = goalBudgetCategories.all { cat ->
             transactions.filter { it.category == cat }.sumOf { it.amount } <= (budgets[cat] ?: 1.0)
         }
 
@@ -356,10 +342,10 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
         goalStatusTv.setTextColor(getColor(if (allOnTarget) R.color.green_accent else R.color.bar_amber))
 
         if (saved >= 0) {
-            savedNoteTv.text = "SAVED %.2f MORE THIS MONTH".format(saved)
+            savedNoteTv.text = "SAVED ${UserPreferences.formatCurrency(this, saved)} MORE THIS MONTH"
             savedNoteTv.setTextColor(getColor(R.color.text_tertiary))
         } else {
-            savedNoteTv.text = "OVER BUDGET BY %.2f".format(-saved)
+            savedNoteTv.text = "OVER BUDGET BY ${UserPreferences.formatCurrency(this, -saved)}"
             savedNoteTv.setTextColor(getColor(R.color.bar_red))
         }
     }
@@ -408,7 +394,7 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
 
             row.findViewById<TextView>(R.id.subName).text = sub.description
             row.findViewById<TextView>(R.id.subDate).text = "Next billing: ${formatDate(nextDate)}"
-            row.findViewById<TextView>(R.id.subAmount).text = "£%.2f".format(sub.amount)
+            row.findViewById<TextView>(R.id.subAmount).text = UserPreferences.formatCurrency(this, sub.amount)
             row.findViewById<TextView>(R.id.subFreq).text = if (sub.type == SubscriptionType.MONTHLY) "/mo" else "/yr"
             row.findViewById<View>(R.id.subDivider).visibility = if (index == sortedSubs.lastIndex) View.GONE else View.VISIBLE
 
@@ -469,7 +455,7 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
 
             row.findViewById<TextView>(R.id.transactionTitle).text   = transaction.description
             row.findViewById<TextView>(R.id.transactionDescription).text   = transaction.category ?: "Uncategorized"
-            row.findViewById<TextView>(R.id.transactionAmount).text = "£%.2f".format(transaction.amount)
+            row.findViewById<TextView>(R.id.transactionAmount).text = UserPreferences.formatCurrency(this, transaction.amount)
             row.findViewById<View>(R.id.transactionDivider).visibility = if (index == transactions.lastIndex) View.GONE else View.VISIBLE
 
             container.addView(row)
@@ -566,5 +552,14 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
             3 -> "rd"
             else -> "th"
         }
+    }
+
+    private fun loadBudgetsFromPrefs(): Map<String, Double> {
+        val prefs = getSharedPreferences("cancri_prefs", MODE_PRIVATE)
+        return mapOf(
+            "Bills" to prefs.getFloat("goal_bills", 900f).toDouble(),
+            "Debts" to prefs.getFloat("goal_debts", 200f).toDouble(),
+            "Savings Goals" to prefs.getFloat("goal_savings", 300f).toDouble()
+        )
     }
 }

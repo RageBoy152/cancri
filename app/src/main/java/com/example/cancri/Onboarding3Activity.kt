@@ -1,36 +1,35 @@
-/* Cancri - money management app
-Programming for Mobile - COMP08068
-Team - Matt Miller, Kyle McNamee, Jaimie Neilson, Andrew Gilmour
-Date created - 24/03/26
-Ver 1.0
-Ver 1.1 Created 08/04/26
- */
-
-package com.example.cancri
+﻿package com.example.cancri
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.animation.AlphaAnimation
 import android.view.animation.AnimationSet
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.TranslateAnimation
 import android.widget.Button
-import android.widget.ImageView
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.cancri.notifications.NotificationScheduler
+import java.util.Locale
 
 class Onboarding3Activity : AppCompatActivity() {
 
-    private val selectedGoals = mutableSetOf<String>()
+    private lateinit var billsAmountInput: EditText
+    private lateinit var debtsAmountInput: EditText
+    private lateinit var savingsAmountInput: EditText
+    private var isUpdatingAmountText = false
+    private lateinit var currencySymbol: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.hide()
         setContentView(R.layout.activity_onboarding3)
+        currencySymbol = UserPreferences.getCurrencySymbol(this)
 
-        // ── Slide up animation ────────────────────────────────────────────
         val card = findViewById<LinearLayout>(R.id.onboarding3Card)
         val slideUp = TranslateAnimation(0f, 0f, 800f, 0f).apply {
             duration = 700
@@ -45,61 +44,126 @@ class Onboarding3Activity : AppCompatActivity() {
         }
         card.startAnimation(animSet)
 
-        // ── Shield button references ──────────────────────────────────────
-        val btnSaveMoney     = findViewById<LinearLayout>(R.id.btnSaveMoney)
-        val btnTrackSpending = findViewById<LinearLayout>(R.id.btnTrackSpending)
-        val btnInvestGrow    = findViewById<LinearLayout>(R.id.btnInvestGrow)
-        val btnBudgetBetter  = findViewById<LinearLayout>(R.id.btnBudgetBetter)
-
-        val imgSaveMoney     = findViewById<ImageView>(R.id.imgSaveMoney)
-        val imgTrackSpending = findViewById<ImageView>(R.id.imgTrackSpending)
-        val imgInvestGrow    = findViewById<ImageView>(R.id.imgInvestGrow)
-        val imgBudgetBetter  = findViewById<ImageView>(R.id.imgBudgetBetter)
-
-        // Map each button container to its goal name and shield image
-        val goalMap = mapOf(
-            btnSaveMoney     to Pair("Save Money",     imgSaveMoney),
-            btnTrackSpending to Pair("Track Spending", imgTrackSpending),
-            btnInvestGrow    to Pair("Invest & Grow",  imgInvestGrow),
-            btnBudgetBetter  to Pair("Budget Better",  imgBudgetBetter)
-        )
-
-        goalMap.forEach { (container, pair) ->
-            val (goalName, imageView) = pair
-            container.setOnClickListener {
-                if (selectedGoals.contains(goalName)) {
-                    selectedGoals.remove(goalName)
-                    imageView.alpha = 1f
-                    container.alpha = 0.6f
-                } else {
-                    selectedGoals.add(goalName)
-                    imageView.alpha = 1f
-                    container.alpha = 1f
-                    container.animate().scaleX(1.08f).scaleY(1.08f).setDuration(100)
-                        .withEndAction {
-                            container.animate().scaleX(1f).scaleY(1f).setDuration(100).start()
-                        }.start()
-                }
-            }
-            container.alpha = 0.6f
-        }
-
-        // ── Navigation ───────────────────────────────────────────────────
+        billsAmountInput = findViewById(R.id.billsAmount)
+        debtsAmountInput = findViewById(R.id.debtsAmount)
+        savingsAmountInput = findViewById(R.id.savingsAmount)
+        billsAmountInput.hint = "${currencySymbol}0.00"
+        debtsAmountInput.hint = "${currencySymbol}0.00"
+        savingsAmountInput.hint = "${currencySymbol}0.00"
         val btnFinish = findViewById<Button>(R.id.btnFinish)
 
+        attachCurrencyValidation(billsAmountInput)
+        attachCurrencyValidation(debtsAmountInput)
+        attachCurrencyValidation(savingsAmountInput)
+
+        loadGoalsFromPrefs()
+
         btnFinish.setOnClickListener {
-            if (selectedGoals.isEmpty()) {
-                Toast.makeText(this, "Please select at least one goal", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+            if (!validateAmountInput(billsAmountInput, "Monthly Bills")) return@setOnClickListener
+            if (!validateAmountInput(debtsAmountInput, "Monthly Debt Payoff Goal")) return@setOnClickListener
+            if (!validateAmountInput(savingsAmountInput, "Monthly Savings Goal")) return@setOnClickListener
 
+            saveGoalsToPrefs()
+            getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+                .edit()
+                .putBoolean(UserPreferences.KEY_ONBOARDING_COMPLETED, true)
+                .apply()
             NotificationScheduler.scheduleDaily(this)
-
-            // ── Navigate to WelcomeActivity instead of MainActivity ──
-            // Name is already saved in SharedPreferences by Onboarding2Activity.
-            // Goals can be saved here if needed in future.
             startActivity(Intent(this, WelcomeActivity::class.java))
             finish()
         }
     }
+
+    private fun attachCurrencyValidation(amountInput: EditText) {
+        amountInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+
+            override fun afterTextChanged(s: Editable?) {
+                if (isUpdatingAmountText) return
+
+                val normalizedAmount = normalizeAmountInput(s?.toString().orEmpty())
+                val rendered = if (normalizedAmount.isEmpty()) "" else "$currencySymbol$normalizedAmount"
+                val current = s?.toString().orEmpty()
+
+                if (rendered != current) {
+                    isUpdatingAmountText = true
+                    amountInput.setText(rendered)
+                    amountInput.setSelection(rendered.length)
+                    isUpdatingAmountText = false
+                }
+            }
+        })
+    }
+
+    private fun loadGoalsFromPrefs() {
+        val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+        billsAmountInput.setText("${currencySymbol}%.2f".format(Locale.UK, prefs.getFloat(KEY_GOAL_BILLS, DEFAULT_BILLS.toFloat())))
+        debtsAmountInput.setText("${currencySymbol}%.2f".format(Locale.UK, prefs.getFloat(KEY_GOAL_DEBTS, DEFAULT_DEBTS.toFloat())))
+        savingsAmountInput.setText("${currencySymbol}%.2f".format(Locale.UK, prefs.getFloat(KEY_GOAL_SAVINGS, DEFAULT_SAVINGS.toFloat())))
+    }
+
+    private fun validateAmountInput(input: EditText, label: String): Boolean {
+        val amountText = input.text?.toString().orEmpty()
+        val normalizedAmount = normalizeAmountInput(amountText)
+        if (normalizedAmount.isEmpty() || !isValidAmount(normalizedAmount)) {
+            Toast.makeText(this, "Please enter a valid amount for $label", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        return true
+    }
+
+    private fun saveGoalsToPrefs() {
+        val bills = normalizeAmountInput(billsAmountInput.text?.toString().orEmpty()).toDoubleOrNull() ?: DEFAULT_BILLS
+        val debts = normalizeAmountInput(debtsAmountInput.text?.toString().orEmpty()).toDoubleOrNull() ?: DEFAULT_DEBTS
+        val savings = normalizeAmountInput(savingsAmountInput.text?.toString().orEmpty()).toDoubleOrNull() ?: DEFAULT_SAVINGS
+
+        getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+            .edit()
+            .putFloat(KEY_GOAL_BILLS, bills.toFloat())
+            .putFloat(KEY_GOAL_DEBTS, debts.toFloat())
+            .putFloat(KEY_GOAL_SAVINGS, savings.toFloat())
+            .apply()
+    }
+
+    private fun normalizeAmountInput(input: String): String {
+        val withoutSymbol = input.replace(currencySymbol, "").replace(",", "").trim()
+        if (withoutSymbol.isEmpty()) return ""
+
+        val builder = StringBuilder()
+        var seenDot = false
+        var decimals = 0
+
+        withoutSymbol.forEach { char ->
+            when {
+                char.isDigit() && (!seenDot || decimals < 2) -> {
+                    builder.append(char)
+                    if (seenDot) decimals++
+                }
+                char == '.' && !seenDot -> {
+                    if (builder.isEmpty()) builder.append('0')
+                    builder.append('.')
+                    seenDot = true
+                }
+            }
+        }
+
+        return builder.toString()
+    }
+
+    private fun isValidAmount(amount: String): Boolean {
+        return amount.matches(Regex("^\\d+(\\.\\d{1,2})?$"))
+    }
+
+    companion object {
+        private const val PREFS_NAME = "cancri_prefs"
+        private const val KEY_GOAL_BILLS = "goal_bills"
+        private const val KEY_GOAL_DEBTS = "goal_debts"
+        private const val KEY_GOAL_SAVINGS = "goal_savings"
+
+        private const val DEFAULT_BILLS = 900.0
+        private const val DEFAULT_DEBTS = 200.0
+        private const val DEFAULT_SAVINGS = 300.0
+    }
 }
+

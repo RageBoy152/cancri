@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import com.example.cancri.R
+import com.example.cancri.UserPreferences
 import com.example.cancri.data.AppDatabase
 import com.example.cancri.data.SubscriptionType
 import com.example.cancri.data.model.SubscriptionModel
@@ -36,10 +37,12 @@ class AddTransactionBottomSheet : BottomSheetDialogFragment() {
     private lateinit var database: AppDatabase
     private var currentAmount = 0.0
     private var isUpdatingAmountText = false
+    private lateinit var currencySymbol: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         database = AppDatabase.getDatabase(requireContext(), dbScope)
+        currencySymbol = UserPreferences.getCurrencySymbol(requireContext())
     }
 
     override fun onCreateView(
@@ -86,7 +89,7 @@ class AddTransactionBottomSheet : BottomSheetDialogFragment() {
                 if (isUpdatingAmountText) return
 
                 val normalizedAmount = normalizeAmountInput(s?.toString().orEmpty())
-                val rendered = if (normalizedAmount.isEmpty()) "" else "£$normalizedAmount"
+                val rendered = if (normalizedAmount.isEmpty()) "" else "$currencySymbol$normalizedAmount"
                 val current = s?.toString().orEmpty()
 
                 if (rendered != current) {
@@ -104,11 +107,17 @@ class AddTransactionBottomSheet : BottomSheetDialogFragment() {
             .forEach { (id, value) ->
                 view.findViewById<Button>(id).setOnClickListener {
                     currentAmount = value
-                    val amountText = "£%.2f".format(Locale.UK, currentAmount)
+                    val amountText = "${currencySymbol}%.2f".format(Locale.UK, currentAmount)
                     amountInput.setText(amountText)
                     amountInput.setSelection(amountText.length)
                 }
             }
+
+        view.findViewById<Button>(R.id.btn5).text = "${currencySymbol}5"
+        view.findViewById<Button>(R.id.btn10).text = "${currencySymbol}10"
+        view.findViewById<Button>(R.id.btn20).text = "${currencySymbol}20"
+        view.findViewById<Button>(R.id.btn50).text = "${currencySymbol}50"
+        amountInput.hint = "${currencySymbol}0.00"
 
         view.findViewById<View>(R.id.dragHandle).setOnClickListener {
             dismiss()
@@ -186,7 +195,7 @@ class AddTransactionBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun normalizeAmountInput(input: String): String {
-        val withoutSymbol = input.replace("£", "").replace(",", "").trim()
+        val withoutSymbol = input.replace(currencySymbol, "").replace(",", "").trim()
         if (withoutSymbol.isEmpty()) return ""
 
         val builder = StringBuilder()

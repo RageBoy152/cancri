@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Background nature image -->
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -12,13 +11,11 @@
         android:scaleType="centerCrop"
         android:src="@drawable/bg_nature" />
 
-    <!-- Vignette overlay -->
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/vignette" />
 
-    <!-- Card -->
     <LinearLayout
         android:id="@+id/onboarding3Card"
         android:layout_width="match_parent"
@@ -30,14 +27,12 @@
         android:paddingHorizontal="16dp"
         android:paddingVertical="32dp">
 
-        <!-- Logo -->
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:contentDescription="Cancri logo"
             android:src="@drawable/ic_cancri_logo" />
 
-        <!-- App name -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,155 +41,101 @@
             android:textColor="@color/text_white"
             android:textSize="18sp" />
 
-        <!-- Headline -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="8dp"
-            android:text="What Are Your Financial Goals?"
+            android:text="What are your financial goals?"
             android:textColor="@color/green_accent"
             android:textSize="26sp"
             android:textFontWeight="400" />
 
-        <!-- Subtitle -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Select all that apply"
+            android:text="Breakdown your month-month financials"
             android:textColor="@color/text_secondary"
             android:textSize="14sp" />
 
-        <!-- Row 1 -->
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:layout_marginTop="32dp"
+            android:text="Monthly Bills"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp" />
 
-            <LinearLayout
-                android:id="@+id/btnSaveMoney"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:padding="8dp">
-                <ImageView
-                    android:id="@+id/imgSaveMoney"
-                    android:layout_width="70dp"
-                    android:layout_height="90dp"
-                    android:contentDescription="Save Money"
-                    android:src="@drawable/ic_shield_save_money" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center"
-                    android:text="Save Money"
-                    android:textColor="@color/text_white"
-                    android:textSize="13sp" />
-            </LinearLayout>
+        <EditText
+            android:id="@+id/billsAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/input_shape"
+            android:gravity="center"
+            android:hint="£0.00"
+            android:inputType="numberDecimal"
+            android:padding="12dp"
+            android:textColor="@color/text_primary"
+            android:textColorHint="#801C241C"
+            android:textSize="16sp"
+            android:textFontWeight="500" />
 
-            <LinearLayout
-                android:id="@+id/btnTrackSpending"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:padding="8dp">
-                <ImageView
-                    android:id="@+id/imgTrackSpending"
-                    android:layout_width="70dp"
-                    android:layout_height="90dp"
-                    android:contentDescription="Track Spending"
-                    android:src="@drawable/ic_shield_track_spending" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center"
-                    android:text="Track Spending"
-                    android:textColor="@color/text_white"
-                    android:textSize="13sp" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <!-- Row 2 -->
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:text="Monthly Debt Payoff Goal"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp" />
 
-            <LinearLayout
-                android:id="@+id/btnInvestGrow"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:padding="8dp">
-                <ImageView
-                    android:id="@+id/imgInvestGrow"
-                    android:layout_width="70dp"
-                    android:layout_height="90dp"
-                    android:contentDescription="Invest and Grow"
-                    android:src="@drawable/ic_shield_invest_grow" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center"
-                    android:text="Invest &amp; Grow"
-                    android:textColor="@color/text_white"
-                    android:textSize="13sp" />
-            </LinearLayout>
+        <EditText
+            android:id="@+id/debtsAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/input_shape"
+            android:gravity="center"
+            android:hint="£0.00"
+            android:inputType="numberDecimal"
+            android:padding="12dp"
+            android:textColor="@color/text_primary"
+            android:textColorHint="#801C241C"
+            android:textSize="16sp"
+            android:textFontWeight="500" />
 
-            <LinearLayout
-                android:id="@+id/btnBudgetBetter"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:padding="8dp">
-                <ImageView
-                    android:id="@+id/imgBudgetBetter"
-                    android:layout_width="70dp"
-                    android:layout_height="90dp"
-                    android:contentDescription="Budget Better"
-                    android:src="@drawable/ic_shield_budget_better" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center"
-                    android:text="Budget Better"
-                    android:textColor="@color/text_white"
-                    android:textSize="13sp" />
-            </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Monthly Savings Goal"
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp" />
 
-        </LinearLayout>
+        <EditText
+            android:id="@+id/savingsAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/input_shape"
+            android:gravity="center"
+            android:hint="£0.00"
+            android:inputType="numberDecimal"
+            android:padding="12dp"
+            android:textColor="@color/text_primary"
+            android:textColorHint="#801C241C"
+            android:textSize="16sp"
+            android:textFontWeight="500" />
 
-        <!-- Get Started button -->
         <Button
             android:id="@+id/btnFinish"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Get Started"
             android:layout_marginTop="32dp"
+            android:background="@drawable/button_main_shape"
+            android:text="Get Started"
             android:textSize="14sp"
-            app:backgroundTint="@null"
-            android:background="@drawable/button_main_shape"/>
+            app:backgroundTint="@null" />
 
     </LinearLayout>
 

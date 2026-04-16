@@ -60,7 +60,14 @@ class SplashActivity : AppCompatActivity() {
                 start()
                 addListener(object : android.animation.AnimatorListenerAdapter() {
                     override fun onAnimationEnd(animation: android.animation.Animator) {
-                        startActivity(Intent(this@SplashActivity, Onboarding1Activity::class.java))
+                        val prefs = getSharedPreferences("cancri_prefs", MODE_PRIVATE)
+                        val hasCompletedOnboarding = prefs.getBoolean(UserPreferences.KEY_ONBOARDING_COMPLETED, false)
+                        val nextActivity = if (hasCompletedOnboarding) {
+                            Onboarding1Activity::class.java
+                        } else {
+                            MainActivity::class.java
+                        }
+                        startActivity(Intent(this@SplashActivity, nextActivity))
                         overridePendingTransition(0, 0)
                         finish()
                     }

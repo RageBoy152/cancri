@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import com.example.cancri.R
+import com.example.cancri.UserPreferences
 import com.example.cancri.data.AppDatabase
 import com.example.cancri.data.SubscriptionType
 import com.example.cancri.data.model.SubscriptionModel
@@ -39,6 +40,7 @@ class AddSubscriptionBottomSheet : BottomSheetDialogFragment() {
     private lateinit var database: AppDatabase
     private var currentAmount = 0.0
     private var isUpdatingAmountText = false
+    private lateinit var currencySymbol: String
     private var selectedType: SubscriptionType = SubscriptionType.MONTHLY
     private var selectedYearlyMonth: Int? = null
     private var selectedYearlyDay: Int? = null
@@ -46,6 +48,7 @@ class AddSubscriptionBottomSheet : BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         database = AppDatabase.getDatabase(requireContext(), dbScope)
+        currencySymbol = UserPreferences.getCurrencySymbol(requireContext())
     }
 
     override fun onCreateView(
@@ -96,7 +99,7 @@ class AddSubscriptionBottomSheet : BottomSheetDialogFragment() {
                 if (isUpdatingAmountText) return
 
                 val normalizedAmount = normalizeAmountInput(s?.toString().orEmpty())
-                val rendered = if (normalizedAmount.isEmpty()) "" else "£$normalizedAmount"
+                val rendered = if (normalizedAmount.isEmpty()) "" else "$currencySymbol$normalizedAmount"
                 val current = s?.toString().orEmpty()
 
                 if (rendered != current) {
@@ -174,6 +177,7 @@ class AddSubscriptionBottomSheet : BottomSheetDialogFragment() {
         view.findViewById<View>(R.id.dragHandle).setOnClickListener { dismiss() }
 
         val editSubscriptionId = arguments?.getString(ARG_EDIT_SUBSCRIPTION_ID)?.let { UUID.fromString(it) }
+        amountInput.hint = "${currencySymbol}0.00"
         if (editSubscriptionId != null) {
             loadEditValues(editSubscriptionId, heading, amountInput, titleInput, monthlyDaySpinner, yearlyDateInput, ::applyCycleUi)
         } else {
@@ -274,7 +278,7 @@ class AddSubscriptionBottomSheet : BottomSheetDialogFragment() {
             val existing = database.getSubscriptionDao().findById(subscriptionId) ?: return@launch
             withContext(Dispatchers.Main) {
                 heading.text = "Edit '${existing.description}'"
-                val amountText = "£%.2f".format(Locale.UK, existing.amount)
+                val amountText = "${currencySymbol}%.2f".format(Locale.UK, existing.amount)
                 amountInput.setText(amountText)
                 amountInput.setSelection(amountText.length)
                 titleInput.setText(existing.description)
@@ -331,7 +335,7 @@ class AddSubscriptionBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun normalizeAmountInput(input: String): String {
-        val withoutSymbol = input.replace("£", "").replace(",", "").trim()
+        val withoutSymbol = input.replace(currencySymbol, "").replace(",", "").trim()
         if (withoutSymbol.isEmpty()) return ""
 
         val builder = StringBuilder()

@@ -1,12 +1,4 @@
-/* Cancri - money management app
-   Programming for Mobile - COMP08068
-   Team - Matt Miller, Kyle McNamee, Jaimie Neilson, Andrew Gilmour
-   Date created - 24/03/26
-   Ver 1.0
-   Ver 1.1 Created 08/04/26
-*/
-
-package com.example.cancri
+﻿package com.example.cancri
 
 import android.content.Intent
 import android.os.Bundle
@@ -47,30 +39,34 @@ class Onboarding2Activity : AppCompatActivity() {
 
         card.startAnimation(animSet)
 
-        val etName  = findViewById<EditText>(R.id.etName)
+        val etName = findViewById<EditText>(R.id.etName)
         val btnNext = findViewById<Button>(R.id.btnNext)
 
+        val prefs = getSharedPreferences("cancri_prefs", MODE_PRIVATE)
+        val existingName = prefs.getString("user_name", "") ?: ""
+        if (existingName.isNotBlank()) {
+            etName.setText(existingName)
+            etName.setSelection(existingName.length)
+        }
+
         btnNext.setOnClickListener {
-            val name = etName.text.toString().trim()
+            val name = etName.text?.toString()?.trim().orEmpty()
 
             if (name.isEmpty()) {
                 Toast.makeText(this, "Please enter your name", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Save to all name keys so dashboard and settings stay in sync
-            getSharedPreferences("cancri_prefs", MODE_PRIVATE)
-                .edit()
+            prefs.edit()
                 .putString("user_name", name)
                 .putString("user_first_name", name)
                 .putString("user_last_name", "")
                 .apply()
 
-            val intent = Intent(this, Onboarding3Activity::class.java)
-            intent.putExtra("USER_NAME", name)
-            startActivity(intent)
+            startActivity(Intent(this, Onboarding3Activity::class.java))
             finish()
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
     }
 }
+

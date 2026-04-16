@@ -81,6 +81,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <Button
+                android:id="@+id/btnSaveGoals"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Save Goals"
+                android:layout_marginTop="32dp"
+                android:textSize="14sp"
+                android:textColor="@color/text_white"
+                app:backgroundTint="@null"
+                android:background="@drawable/button_main_shape"/>
+
         </LinearLayout>
 
     </ScrollView>

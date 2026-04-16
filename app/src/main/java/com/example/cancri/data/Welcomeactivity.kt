@@ -38,9 +38,7 @@ class WelcomeActivity : AppCompatActivity() {
         val arrowView    = findViewById<ImageView>(R.id.welcomeArrow)
 
         // ── Populate name from SharedPreferences ─────────────────────────
-        val prefs = getSharedPreferences("cancri_prefs", MODE_PRIVATE)
-        val userName = prefs.getString("user_name", "there") ?: "there"
-        nameView.text = userName
+        nameView.text = UserPreferences.getDisplayName(this)
 
         // ── Time-aware greeting ───────────────────────────────────────────
         timeGreeting.text = getTimeGreeting()

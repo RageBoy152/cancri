@@ -83,22 +83,19 @@
                             android:textSize="11sp"
                             android:textStyle="bold" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/inputUserName"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Tap to edit"
-                            android:textSize="15sp"
-                            android:textColor="@color/text_primary" />
+                            android:background="@android:color/transparent"
+                            android:hint="Tap to edit"
+                            android:inputType="textPersonName"
+                            android:maxLines="1"
+                            android:textColor="@color/text_primary"
+                            android:textColorHint="@color/text_tertiary"
+                            android:textSize="15sp" />
 
                     </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=">"
-                        android:textSize="18sp"
-                        android:textColor="@color/text_secondary" />
 
                 </LinearLayout>
 
@@ -122,21 +119,13 @@
                             android:textSize="11sp"
                             android:textStyle="bold" />
 
-                        <TextView
+                        <Spinner
+                            android:id="@+id/spinnerCurrency"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="£ British Pound"
-                            android:textSize="15sp"
-                            android:textColor="@color/text_primary" />
+                            android:spinnerMode="dropdown" />
 
                     </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=">"
-                        android:textSize="18sp"
-                        android:textColor="@color/text_secondary" />
 
                 </LinearLayout>
 

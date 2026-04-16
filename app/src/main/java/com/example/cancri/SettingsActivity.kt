@@ -7,19 +7,21 @@
 package com.example.cancri
 
 import android.animation.ObjectAnimator
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
-import android.widget.LinearLayout
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
 
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var prefs: SharedPreferences
+    private lateinit var nameInput: EditText
+    private lateinit var currencySpinner: Spinner
+    private var isBindingCurrency = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,32 +29,74 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
 
         prefs = getSharedPreferences("cancri_prefs", MODE_PRIVATE)
+        nameInput = findViewById(R.id.inputUserName)
+        currencySpinner = findViewById(R.id.spinnerCurrency)
 
+        setupCurrencySpinner()
+        setupNameInput()
         animatePanelEntry()
     }
 
     override fun onResume() {
         super.onResume()
-        updateHero()
+        bindValues()
     }
 
-    private fun updateHero() {
-        val nameRow  = findViewById<TextView>(R.id.inputUserName)
+    private fun bindValues() {
+        val displayName = UserPreferences.getDisplayName(this)
+        nameInput.setText(if (displayName == "there") "" else displayName)
+        nameInput.setSelection(nameInput.text?.length ?: 0)
 
-        val firstName = prefs.getString("user_first_name", "") ?: ""
-        val lastName  = prefs.getString("user_last_name", "") ?: ""
-        val color     = prefs.getString("avatar_color", "#52B788") ?: "#52B788"
+        isBindingCurrency = true
+        val selectedSymbol = UserPreferences.getCurrencySymbol(this)
+        val options = currencyOptions()
+        val index = options.indexOfFirst { it.first == selectedSymbol }.coerceAtLeast(0)
+        currencySpinner.setSelection(index)
+        isBindingCurrency = false
+    }
 
-        val initials = buildString {
-            if (firstName.isNotEmpty()) append(firstName.first().uppercase())
-            if (lastName.isNotEmpty()) append(lastName.first().uppercase())
+    private fun setupNameInput() {
+        nameInput.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                saveName()
+            }
         }
+    }
 
-        val displayName = firstName.ifEmpty {
-            prefs.getString("user_name", "there") ?: "there"
+    private fun saveName() {
+        val name = nameInput.text?.toString()?.trim().orEmpty()
+        prefs.edit()
+            .putString(UserPreferences.KEY_USER_NAME, name)
+            .putString(UserPreferences.KEY_USER_FIRST_NAME, name)
+            .putString(UserPreferences.KEY_USER_LAST_NAME, "")
+            .apply()
+    }
+
+    private fun setupCurrencySpinner() {
+        val options = currencyOptions()
+        val labels = options.map { it.second }
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, labels)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        currencySpinner.adapter = adapter
+
+        currencySpinner.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
+                if (isBindingCurrency) return
+                val symbol = options[position].first
+                prefs.edit().putString(UserPreferences.KEY_CURRENCY_SYMBOL, symbol).apply()
+            }
+
+            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) = Unit
         }
+    }
 
-        nameRow.text  = if (firstName.isEmpty()) "Tap to edit" else "$firstName $lastName".trim()
+    private fun currencyOptions(): List<Pair<String, String>> {
+        return listOf(
+            "\u00A3" to "\u00A3 British Pound",
+            "$" to "$ US Dollar",
+            "\u20AC" to "\u20AC Euro",
+            "\u00A5" to "\u00A5 Yen"
+        )
     }
 
 
@@ -65,5 +109,10 @@ class SettingsActivity : AppCompatActivity() {
                 start()
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        saveName()
     }
 }

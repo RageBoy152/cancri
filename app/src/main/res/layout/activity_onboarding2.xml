@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Background nature image -->
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -12,13 +11,11 @@
         android:scaleType="centerCrop"
         android:src="@drawable/bg_nature" />
 
-    <!-- Vignette overlay -->
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/vignette" />
 
-    <!-- Card -->
     <LinearLayout
         android:id="@+id/onboarding2Card"
         android:layout_width="match_parent"
@@ -30,14 +27,12 @@
         android:paddingHorizontal="16dp"
         android:paddingVertical="32dp">
 
-        <!-- Logo -->
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:contentDescription="Cancri logo"
             android:src="@drawable/ic_cancri_logo" />
 
-        <!-- App name -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,7 +41,6 @@
             android:textColor="@color/text_white"
             android:textSize="18sp" />
 
-        <!-- Headline -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -57,15 +51,13 @@
             android:textSize="26sp"
             android:textFontWeight="400" />
 
-        <!-- Subtitle -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="To start your journey, please tell us about you"
+            android:text="To start your journey, please tell us a bit about you"
             android:textColor="@color/text_secondary"
             android:textSize="14sp" />
 
-        <!-- Name label -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -74,7 +66,6 @@
             android:textColor="@color/text_secondary"
             android:textSize="14sp" />
 
-        <!-- Name input -->
         <EditText
             android:id="@+id/etName"
             android:layout_width="match_parent"
@@ -87,16 +78,15 @@
             android:textColorHint="#801C241C"
             android:textSize="14sp" />
 
-        <!-- Next button -->
         <Button
             android:id="@+id/btnNext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Next"
             android:layout_marginTop="32dp"
+            android:background="@drawable/button_main_shape"
+            android:text="Next"
             android:textSize="14sp"
-            app:backgroundTint="@null"
-            android:background="@drawable/button_main_shape"/>
+            app:backgroundTint="@null" />
 
     </LinearLayout>
 

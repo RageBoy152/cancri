@@ -1,4 +1,4 @@
-/* Cancri - money management app
+﻿/* Cancri - money management app
    Programming for Mobile - COMP08068
    Team - Matt Miller, Kyle McNamee, Jaimie Neilson, Andrew Gilmour
    Date created - 24/03/26
@@ -78,9 +78,9 @@ class SubscriptionsActivity : AppCompatActivity(), NavbarFragment.Listener {
                 )
             }
 
-            row.findViewById<TextView>(R.id.editSubName).text   = sub.description
-            row.findViewById<TextView>(R.id.editSubAmount).text = "£%.2f".format(sub.amount)
-            row.findViewById<TextView>(R.id.editSubType).text   = formatRenewalText(sub)
+            row.findViewById<TextView>(R.id.editSubName).text = sub.description
+            row.findViewById<TextView>(R.id.editSubAmount).text = UserPreferences.formatCurrency(this, sub.amount)
+            row.findViewById<TextView>(R.id.editSubType).text = formatRenewalText(sub)
 
             row.findViewById<View>(R.id.btnEditSub).setOnClickListener {
                 AddSubscriptionBottomSheet
@@ -144,3 +144,4 @@ class SubscriptionsActivity : AppCompatActivity(), NavbarFragment.Listener {
         }
     }
 }
+
