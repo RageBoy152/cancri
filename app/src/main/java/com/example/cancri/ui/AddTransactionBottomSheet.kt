@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
@@ -68,9 +69,14 @@ class AddTransactionBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val heading = view.findViewById<TextView>(R.id.transactionAddEditHeading)
         val amountInput = view.findViewById<EditText>(R.id.amountDisplay)
         val input = view.findViewById<EditText>(R.id.inputName)
         val spinner = view.findViewById<Spinner>(R.id.spinnerCategory)
+        val saveButton = view.findViewById<Button>(R.id.btnSaveTransaction)
+        val editTransactionId = arguments?.getString(ARG_EDIT_TRANSACTION_ID)?.let { value ->
+            runCatching { UUID.fromString(value) }.getOrNull()
+        }
 
         val categories = arguments?.getStringArrayList(ARG_CATEGORIES).orEmpty()
         val categoryAdapter = ArrayAdapter(
@@ -123,7 +129,16 @@ class AddTransactionBottomSheet : BottomSheetDialogFragment() {
             dismiss()
         }
 
-        view.findViewById<Button>(R.id.btnSaveTransaction).setOnClickListener {
+        if (editTransactionId != null) {
+            heading.text = "Edit Transaction"
+            saveButton.text = "Save Changes"
+            loadEditValues(editTransactionId, amountInput, input, spinner)
+        } else {
+            heading.text = "Add Transaction"
+            saveButton.text = "Save Transaction"
+        }
+
+        saveButton.setOnClickListener {
             val amountText = amountInput.text?.toString().orEmpty()
             val normalizedAmount = normalizeAmountInput(amountText)
             if (normalizedAmount.isEmpty() || !isValidAmount(normalizedAmount)) {
@@ -142,32 +157,41 @@ class AddTransactionBottomSheet : BottomSheetDialogFragment() {
             val category = if (selected == "----" || selected == "Other") null else selected
 
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                var linkedSubId: UUID? = null
-                if (category == "Subscriptions") {
-                    linkedSubId = UUID.randomUUID()
-                    database.getSubscriptionDao().upsert(
-                        SubscriptionModel(
-                            id = linkedSubId,
+                if (editTransactionId != null) {
+                    updateExistingTransaction(
+                        transactionId = editTransactionId,
+                        amount = currentAmount,
+                        description = name.ifEmpty { category ?: "Transaction" },
+                        category = category
+                    )
+                } else {
+                    var linkedSubId: UUID? = null
+                    if (category == "Subscriptions") {
+                        linkedSubId = UUID.randomUUID()
+                        database.getSubscriptionDao().upsert(
+                            SubscriptionModel(
+                                id = linkedSubId,
+                                amount = currentAmount,
+                                description = name.ifEmpty { "Subscription" },
+                                type = SubscriptionType.MONTHLY,
+                                billingDay = null,
+                                billingMonth = null
+                            )
+                        )
+                    }
+
+                    database.getTransactionDao().upsert(
+                        TransactionModel(
+                            id = UUID.randomUUID(),
+                            createdAt = Instant.now(),
+                            updatedAt = null,
                             amount = currentAmount,
-                            description = name.ifEmpty { "Subscription" },
-                            type = SubscriptionType.MONTHLY,
-                            billingDay = null,
-                            billingMonth = null
+                            description = name.ifEmpty { category ?: "Transaction" },
+                            subscriptionId = linkedSubId,
+                            category = category
                         )
                     )
                 }
-
-                database.getTransactionDao().upsert(
-                    TransactionModel(
-                        id = UUID.randomUUID(),
-                        createdAt = Instant.now(),
-                        updatedAt = null,
-                        amount = currentAmount,
-                        description = name.ifEmpty { category ?: "Transaction" },
-                        subscriptionId = linkedSubId,
-                        category = category
-                    )
-                )
 
                 withContext(Dispatchers.Main) {
                     Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show()
@@ -177,14 +201,68 @@ class AddTransactionBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
+    private suspend fun updateExistingTransaction(
+        transactionId: UUID,
+        amount: Double,
+        description: String,
+        category: String?
+    ) {
+        val existing = database.getTransactionDao().findById(transactionId) ?: return
+        database.getTransactionDao().update(
+            existing.copy(
+                amount = amount,
+                description = description,
+                category = category,
+                updatedAt = Instant.now()
+            )
+        )
+    }
+
+    private fun loadEditValues(
+        transactionId: UUID,
+        amountInput: EditText,
+        input: EditText,
+        spinner: Spinner
+    ) {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            val existing = database.getTransactionDao().findById(transactionId) ?: return@launch
+            withContext(Dispatchers.Main) {
+                val amountText = "${currencySymbol}%.2f".format(Locale.UK, existing.amount)
+                amountInput.setText(amountText)
+                amountInput.setSelection(amountText.length)
+                input.setText(existing.description)
+
+                val selectedCategory = existing.category
+                if (selectedCategory != null) {
+                    val index = (0 until spinner.count).firstOrNull {
+                        spinner.getItemAtPosition(it)?.toString() == selectedCategory
+                    } ?: 0
+                    spinner.setSelection(index)
+                } else {
+                    spinner.setSelection(0)
+                }
+            }
+        }
+    }
+
     companion object {
         const val TAG = "AddTransactionBottomSheet"
         private const val ARG_CATEGORIES = "arg_categories"
+        private const val ARG_EDIT_TRANSACTION_ID = "arg_edit_transaction_id"
 
         fun newInstance(categories: ArrayList<String>): AddTransactionBottomSheet {
             return AddTransactionBottomSheet().apply {
                 arguments = Bundle().apply {
                     putStringArrayList(ARG_CATEGORIES, categories)
+                }
+            }
+        }
+
+        fun newEditInstance(categories: ArrayList<String>, transactionId: UUID): AddTransactionBottomSheet {
+            return AddTransactionBottomSheet().apply {
+                arguments = Bundle().apply {
+                    putStringArrayList(ARG_CATEGORIES, categories)
+                    putString(ARG_EDIT_TRANSACTION_ID, transactionId.toString())
                 }
             }
         }

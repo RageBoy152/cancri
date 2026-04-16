@@ -330,9 +330,20 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Transactions"
+                    android:text="Recent Transactions"
                     android:textColor="@color/text_primary"
                     android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/btnEditTransactions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:text="VIEW ALL >"
+                    android:textColor="@color/text_tertiary"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
             </LinearLayout>

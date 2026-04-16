@@ -29,6 +29,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.Month
 import java.util.Locale
+import java.util.UUID
 
 class SubscriptionsActivity : AppCompatActivity(), NavbarFragment.Listener {
 
@@ -48,6 +49,17 @@ class SubscriptionsActivity : AppCompatActivity(), NavbarFragment.Listener {
         lifecycleScope.launch {
             database.getSubscriptionDao().observeAll().collect { subs ->
                 withContext(Dispatchers.Main) { populateList(subs) }
+            }
+        }
+
+        if (savedInstanceState == null) {
+            val editSubscriptionId = intent.getStringExtra(EXTRA_EDIT_SUBSCRIPTION_ID)?.let { value ->
+                runCatching { UUID.fromString(value) }.getOrNull()
+            }
+            if (editSubscriptionId != null) {
+                AddSubscriptionBottomSheet
+                    .newEditInstance(ArrayList(categoryNames), editSubscriptionId)
+                    .show(supportFragmentManager, AddSubscriptionBottomSheet.TAG)
             }
         }
     }
@@ -142,6 +154,10 @@ class SubscriptionsActivity : AppCompatActivity(), NavbarFragment.Listener {
             3 -> "rd"
             else -> "th"
         }
+    }
+
+    companion object {
+        const val EXTRA_EDIT_SUBSCRIPTION_ID = "extra_edit_subscription_id"
     }
 }
 

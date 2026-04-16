@@ -444,7 +444,7 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
             return
         }
 
-        transactions.forEachIndexed { index, transaction ->
+        transactions.take(20).forEachIndexed { index, transaction ->
             val row  = LayoutInflater.from(this).inflate(R.layout.item_transaction, container, false)
             val logo = row.findViewById<TextView>(R.id.transactionLogo)
 
@@ -471,6 +471,9 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
         }
         findViewById<TextView>(R.id.btnEditSubs).setOnClickListener {
             startActivity(android.content.Intent(this, SubscriptionsActivity::class.java))
+        }
+        findViewById<TextView>(R.id.btnEditTransactions).setOnClickListener {
+            startActivity(android.content.Intent(this, TransactionsActivity::class.java))
         }
     }
 
