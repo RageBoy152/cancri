@@ -14,6 +14,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -63,7 +64,7 @@ class SplashActivity : AppCompatActivity() {
                     override fun onAnimationEnd(animation: android.animation.Animator) {
                         val prefs = getSharedPreferences("cancri_prefs", MODE_PRIVATE)
                         val hasCompletedOnboarding = prefs.getBoolean(UserPreferences.KEY_ONBOARDING_COMPLETED, false)
-                        val nextActivity = if (hasCompletedOnboarding) {
+                        val nextActivity = if (!hasCompletedOnboarding) {
                             Onboarding1Activity::class.java
                         } else {
                             MainActivity::class.java
