@@ -48,6 +48,16 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/btnAddSubscription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/button_main_shape"
+        android:text="Add Subscription"
+        android:textSize="14sp"
+        app:backgroundTint="@null" />
+
     <!-- ── Subscription rows ───────────────────────────────────────────── -->
     <ScrollView
         android:layout_width="match_parent"

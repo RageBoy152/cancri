@@ -22,7 +22,6 @@ import com.example.cancri.data.SubscriptionType
 import com.example.cancri.data.UserPreferences
 import com.example.cancri.data.model.SubscriptionModel
 import com.example.cancri.ui.AddSubscriptionBottomSheet
-import com.example.cancri.ui.NavbarFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -32,7 +31,7 @@ import java.time.Month
 import java.util.Locale
 import java.util.UUID
 
-class SubscriptionsActivity : AppCompatActivity(), NavbarFragment.Listener {
+class SubscriptionsActivity : AppCompatActivity() {
 
     private val dbScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private lateinit var database: AppDatabase
@@ -48,6 +47,11 @@ class SubscriptionsActivity : AppCompatActivity(), NavbarFragment.Listener {
         userPreferences = UserPreferences(this)
 
         findViewById<View>(R.id.btnBack).setOnClickListener { finish() }
+        findViewById<View>(R.id.btnAddSubscription).setOnClickListener {
+            AddSubscriptionBottomSheet
+                .newInstance(ArrayList(categoryNames))
+                .show(supportFragmentManager, AddSubscriptionBottomSheet.TAG)
+        }
 
         lifecycleScope.launch {
             database.getSubscriptionDao().observeAll().collect { subs ->
@@ -127,12 +131,6 @@ class SubscriptionsActivity : AppCompatActivity(), NavbarFragment.Listener {
 
             container.addView(row)
         }
-    }
-
-    override fun onBottomNavFabClicked() {
-        AddSubscriptionBottomSheet
-            .newInstance(ArrayList(categoryNames))
-            .show(supportFragmentManager, AddSubscriptionBottomSheet.TAG)
     }
 
     private fun formatRenewalText(subscription: SubscriptionModel): String {

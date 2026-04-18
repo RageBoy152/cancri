@@ -14,14 +14,13 @@ import com.example.cancri.data.AppDatabase
 import com.example.cancri.data.UserPreferences
 import com.example.cancri.data.model.TransactionModel
 import com.example.cancri.ui.AddTransactionBottomSheet
-import com.example.cancri.ui.NavbarFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class TransactionsActivity : AppCompatActivity(), NavbarFragment.Listener {
+class TransactionsActivity : AppCompatActivity() {
 
     private val dbScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private lateinit var database: AppDatabase
@@ -114,11 +113,5 @@ class TransactionsActivity : AppCompatActivity(), NavbarFragment.Listener {
 
             container.addView(row)
         }
-    }
-
-    override fun onBottomNavFabClicked() {
-        AddTransactionBottomSheet
-            .newInstance(ArrayList(categoryNames))
-            .show(supportFragmentManager, AddTransactionBottomSheet.TAG)
     }
 }
