@@ -427,8 +427,10 @@ class MainActivity : AppCompatActivity(), NavbarFragment.Listener {
             row.setOnClickListener {
                 lifecycleScope.launch(Dispatchers.IO) {
                     if (isComplete) {
-                        latestTx?.let { database.getTransactionDao().delete(it) }
+                        // delete this months subscription transaction if we're unchecking
+                        latestTx.let { database.getTransactionDao().delete(it) }
                     } else {
+                        // add new transaction when checked
                         database.getTransactionDao().upsert(
                             TransactionModel(
                                 id = java.util.UUID.randomUUID(),
